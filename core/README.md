@@ -36,21 +36,18 @@ let node_id = core.node_id();
 
 ## 🔐 Security Features
 
-All security validations are enforced at the core level:
+All security validations are enforced at the core level. Unlike server-based file sharing apps, **Seyfr has no hard file size limits** because it's peer-to-peer: you're transferring between your own devices, not filling a company's servers.
 
-- **Path Traversal Protection**: Uses `path_jail` to validate all file paths
-- **File Size Limits**: 1 GB per file, 10 GB per collection
-- **Collection Limits**: Maximum 10,000 files per transfer
+- **Path Traversal Protection**: Uses `path_jail` to validate all file paths — prevents `../../etc/shadow` attacks
 - **Destination Validation**: Ensures files only write to intended directories
-- **Symlink Safety**: Skips symlinks by default to prevent escapes
+- **Symlink Safety**: Skips symlinks by default to prevent "Zip Slip" and shortcut-based exploits
 
-### Security Constants
+### What P2P Apps Actually Need to Protect Against
 
-```rust
-const MAX_FILE_SIZE: u64 = 1_073_741_824;           // 1 GB
-const MAX_COLLECTION_SIZE: u64 = 10_737_418_240;    // 10 GB
-const MAX_FILES_IN_COLLECTION: u64 = 10_000;
-```
+For peer-to-peer transfers, the real threats are malicious **paths** and **content**, not file sizes:
+- A malicious sender could include `../../etc/passwd` as a filename
+- A symlink could point to `C:\Windows\System32`
+- These are the attacks that matter for P2P — and Seyfr handles them all
 
 ## 📊 Progress Tracking
 

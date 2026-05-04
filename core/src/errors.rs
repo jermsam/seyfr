@@ -11,8 +11,6 @@ pub enum SeyfrError {
     EmptyFolder { path: String },
     Timeout,
     Internal { message: String },
-    FileTooLarge { size: u64, max: u64 },
-    TooManyFiles { count: u64, max: u64 },
     PathTraversal { path: String, message: String },
     InvalidPath { message: String },
 }
@@ -31,8 +29,6 @@ impl std::fmt::Display for SeyfrError {
             SeyfrError::EmptyFolder { path } => write!(f, "empty folder: {}", path),
             SeyfrError::Timeout => write!(f, "transfer timeout"),
             SeyfrError::Internal { message } => write!(f, "internal error: {}", message),
-            SeyfrError::FileTooLarge { size, max } => write!(f, "file too large: {} bytes (max: {} bytes)", size, max),
-            SeyfrError::TooManyFiles { count, max } => write!(f, "too many files: {} (max: {})", count, max),
             SeyfrError::PathTraversal { path, message } => write!(f, "path traversal attempt: {} - {}", path, message),
             SeyfrError::InvalidPath { message } => write!(f, "invalid path: {}", message),
         }
@@ -54,8 +50,6 @@ impl SeyfrError {
             SeyfrError::EmptyFolder { .. } => 1004,
             SeyfrError::Timeout => 3002,
             SeyfrError::Internal { .. } => 9001,
-            SeyfrError::FileTooLarge { .. } => 2002,
-            SeyfrError::TooManyFiles { .. } => 2003,
             SeyfrError::PathTraversal { .. } => 1005,
             SeyfrError::InvalidPath { .. } => 1006,
         }

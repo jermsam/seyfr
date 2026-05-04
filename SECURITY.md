@@ -14,13 +14,45 @@ An attacker tries to "escape" the folder you've given them access to by using se
 
 A `path_jail` (or chroot-like mechanism) forces the application to treat a specific directory as the "root." Even if a malicious path contains 50 "go up" commands, the app physically cannot see anything above its assigned sandbox.
 
-## 2. File Size & Collection Limits
+## 2. Why Seyfr Has NO Hard File Size Limits
 
-### The Threat: Denial of Service (DoS)
+### The P2P Difference
 
-**Size Limits:** Without a 1 GB limit, a user could upload a "Zip Bomb" or a 500 GB file that fills your server's disk space, crashing the service for everyone.
+Unlike server-based file sharing (Dropbox, Google Drive), **Seyfr is peer-to-peer**. This fundamentally changes the security model:
 
-**Collection Limits:** Processing 10,000+ files at once requires massive amounts of RAM and CPU to index and track. An uncapped transfer could cause the app to hang or crash due to memory exhaustion (OOM).
+| Scenario | Server-Based App | P2P App (Seyfr) |
+|----------|---------------|----------------|
+| Who's disk fills? | **Company's servers** | **Your own device** |
+| Who pays for storage? | **Company** | **You** |
+| Unsolicited attack? | **Yes** - anyone can upload | **No** - you must choose to receive |
+| Shared resource? | **Yes** - affects other users | **No** - only affects you |
+
+### Why Size Limits Make Sense for Dropbox But NOT for Seyfr
+
+**Dropbox/Google Drive need limits because:**
+- You're filling **THEIR** servers with **YOUR** data
+- Malicious users can upload 500 GB to abuse free tiers
+- Storage costs are borne by the company
+- One user's abuse affects all other users (shared infrastructure)
+
+**Seyfr doesn't need limits because:**
+- You're transferring between **YOUR** devices
+- You can't "DoS yourself" by choice
+- No shared infrastructure to abuse
+- iroh-blobs streams data efficiently (no loading entire files in memory)
+- The recipient must **actively choose** to accept the transfer
+
+### The Real P2P Threat: Zip Slip & Path Traversal
+
+What P2P apps actually need to worry about isn't file **size** - it's file **content** and **paths**:
+- A malicious sender could include `../../etc/shadow` as a filename
+- A symlink could point to `C:\Windows\System32`
+- These are the attacks that matter for P2P
+
+**Seyfr protects against these with:**
+- `path_jail` for path containment (Section 1)
+- Symlink skipping (Section 4)
+- Destination validation (Section 3)
 
 ## 3. Destination Validation
 
@@ -49,20 +81,10 @@ By skipping symlinks by default, the app refuses to follow these "redirects," en
 | Feature | Primary Goal | Prevents... |
 | --- | --- | --- |
 | Path Jail | Containment | Accessing OS system files |
-| Size Limits | Resource Stability | Disk space exhaustion (DoS) |
-| Collection Limits | Performance | Memory crashes / App hanging |
 | Destination Validation | Integrity | Overwriting unintended directories |
 | Symlink Safety | Escape Prevention | "Zip Slip" and shortcut-based exploits |
 
 ---
-
-## Current Limits
-
-```rust
-const MAX_FILE_SIZE: u64 = 1_073_741_824;           // 1 GB per file
-const MAX_COLLECTION_SIZE: u64 = 10_737_418_240;    // 10 GB per collection
-const MAX_FILES_IN_COLLECTION: u64 = 10_000;        // Max 10,000 files
-```
 
 ## Reporting a Vulnerability
 

@@ -11,16 +11,6 @@ use crate::progress::ProgressSink;
 use futures_util::stream::{self, StreamExt};
 use path_jail::Jail;
 
-// Security constants
-/// Maximum size for single file download (1 GB)
-const MAX_FILE_SIZE: u64 = 1_073_741_824;
-
-/// Maximum size for collection download (10 GB)
-const MAX_COLLECTION_SIZE: u64 = 10_737_418_240;
-
-/// Maximum number of files in a collection
-const MAX_FILES_IN_COLLECTION: u64 = 10_000;
-
 /// Extract progress bytes from DownloadProgressItem::Progress(u64)
 fn parse_progress_bytes(event_str: &str) -> Option<u64> {
     // Format: "Progress(12345)"
@@ -282,14 +272,6 @@ impl TransferEngine {
                 // Query size before downloading for proper progress reporting
                 let collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
                 
-                // Validate collection size
-                if collection_size > MAX_COLLECTION_SIZE {
-                    return Err(SeyfrError::FileTooLarge {
-                        size: collection_size,
-                        max: MAX_COLLECTION_SIZE,
-                    });
-                }
-                
                 let download_progress = downloader.download(ticket.hash(), Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
                     message: format!("failed to start download: {}", e),
@@ -365,14 +347,6 @@ impl TransferEngine {
                 })?;
 
                 let total = meta.names().len() as u64;
-                
-                // Validate file count
-                if total > MAX_FILES_IN_COLLECTION {
-                    return Err(SeyfrError::TooManyFiles {
-                        count: total,
-                        max: MAX_FILES_IN_COLLECTION,
-                    });
-                }
 
                 // Download and export each file
                 for (idx, (name, hash)) in meta.names().iter().zip(hashes).enumerate() {
@@ -393,14 +367,6 @@ impl TransferEngine {
                     // Download the blob with progress
                     // Query size first for proper progress reporting
                     let file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
-                    
-                    // Validate file size
-                    if file_size > MAX_FILE_SIZE {
-                        return Err(SeyfrError::FileTooLarge {
-                            size: file_size,
-                            max: MAX_FILE_SIZE,
-                        });
-                    }
                     
                     let download_progress = downloader.download(hash, Some(ticket.addr().id));
                     let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
@@ -450,14 +416,6 @@ impl TransferEngine {
 
                 // Query size first for proper progress reporting
                 let file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
-                
-                // Validate file size
-                if file_size > MAX_FILE_SIZE {
-                    return Err(SeyfrError::FileTooLarge {
-                        size: file_size,
-                        max: MAX_FILE_SIZE,
-                    });
-                }
                 
                 let download_progress = downloader.download(hash, Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {

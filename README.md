@@ -48,11 +48,11 @@ This architecture follows a clear separation of concerns:
 
 All security protections are implemented at the core level and enforced consistently across every platform. See [`SECURITY.md`](./SECURITY.md) for detailed threat analysis and mitigation strategies.
 
-- **Path Traversal Protection**: Uses `path_jail` to prevent malicious paths
-- **File Size Limits**: 1 GB per file, 10 GB per collection
-- **Collection Limits**: Maximum 10,000 files per transfer
+**P2P apps don't need hard file size limits** — you're transferring between your own devices, not filling a company's servers. The real threats are malicious **paths** and **symlinks**.
+
+- **Path Traversal Protection**: Uses `path_jail` to prevent `../../etc/shadow` attacks
 - **Destination Validation**: Ensures files only write to intended directories
-- **Symlink Safety**: Skips symlinks by default to prevent escapes
+- **Symlink Safety**: Skips symlinks by default to prevent "Zip Slip" exploits
 
 ## 🏗️ Architecture
 
