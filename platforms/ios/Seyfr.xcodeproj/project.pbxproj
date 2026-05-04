@@ -1,0 +1,251 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C885C6DD841C93F3B40130A906F08D0 /* SeyfrApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57308D913E9EF3B2692A42558DDDEF33 /* SeyfrApp.swift */; };
+		8786C97651A85A74170EC7DE5C502431 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F9DF6C451237BE2AE599F12E4AAB08 /* ContentView.swift */; };
+		04C7A09ABA93330FA8C94820BEE5DF67 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0347B5C6A385317FDA911194B8AB299 /* AppState.swift */; };
+		46FC53553F94D807217362910FE8D69A /* seyfr_core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363DB5DCC78F306DC2E5888D5E6661CC /* seyfr_core.swift */; };
+		8D3F8B72FEFE952CFB1A8F6E4BEF06B9 /* seyfr_core.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7A86D3198157201CABF98F82677A52 /* seyfr_core.xcframework */; };
+		E2F8F6A3458CCE3104D790B1F4932114 /* seyfr_core.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7A86D3198157201CABF98F82677A52 /* seyfr_core.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3A425D25D68D966B2B3D02740F79909 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4797A4A7B5F604C708A1FFE91D26FC2A /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		57308D913E9EF3B2692A42558DDDEF33 /* SeyfrApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeyfrApp.swift; sourceTree = "<group>"; };
+		F7F9DF6C451237BE2AE599F12E4AAB08 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F0347B5C6A385317FDA911194B8AB299 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		C48D08B24AA5DC0C2585E951C230E3DC /* Seyfr */ = {isa = PBXFileReference; explicitFileType = "wrapper.application"; includeInIndex = 0; path = Seyfr.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CEF98B71661487C4432118D437A7C62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B459F6BAFB14D4962346F09280BB5C3E /* Seyfr-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Seyfr-Bridging-Header.h"; sourceTree = "<group>"; };
+		363DB5DCC78F306DC2E5888D5E6661CC /* seyfr_core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = seyfr_core.swift; sourceTree = "<group>"; };
+		2E7A86D3198157201CABF98F82677A52 /* seyfr_core.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = seyfr_core.xcframework; sourceTree = "<group>"; };
+		4797A4A7B5F604C708A1FFE91D26FC2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		14CD80FB82B801C66F625D52519F853D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D3F8B72FEFE952CFB1A8F6E4BEF06B9 /* seyfr_core.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C33A46A24E52CF5981A18A116B064707 = {
+			isa = PBXGroup;
+			children = (
+				57308D913E9EF3B2692A42558DDDEF33 /* SeyfrApp.swift */,
+				F7F9DF6C451237BE2AE599F12E4AAB08 /* ContentView.swift */,
+				F0347B5C6A385317FDA911194B8AB299 /* AppState.swift */,
+				363DB5DCC78F306DC2E5888D5E6661CC /* seyfr_core.swift */,
+				2E7A86D3198157201CABF98F82677A52 /* seyfr_core.xcframework */,
+				4797A4A7B5F604C708A1FFE91D26FC2A /* Assets.xcassets */,
+				4CEF98B71661487C4432118D437A7C62 /* Info.plist */,
+				B459F6BAFB14D4962346F09280BB5C3E /* Seyfr-Bridging-Header.h */,
+			);
+			sourceTree = "<group>";
+		};
+		D9C2507E655FC2D06DB665B061F978F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C48D08B24AA5DC0C2585E951C230E3DC /* Seyfr.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		335AA54A982FBB0665CF287C79B52C03 = {
+			isa = PBXGroup;
+			children = (
+				C33A46A24E52CF5981A18A116B064707,
+				D9C2507E655FC2D06DB665B061F978F3,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2BE3E268617E7C1140FC713330F5C911 /* Seyfr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 853534D50C9FB501D06B0C9CE55D5E98 /* Build configuration list for PBXNativeTarget "Seyfr" */;
+			buildPhases = (
+				434442F5B0B291D930D89173286709FE /* Sources */,
+				14CD80FB82B801C66F625D52519F853D /* Frameworks */,
+				1AC9C2D1483BA5C2979C175F399A43F6 /* Resources */,
+				E34542FDF0FDADAB53D29996E1F744DC /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Seyfr;
+			productName = Seyfr;
+			productReference = C48D08B24AA5DC0C2585E951C230E3DC /* Seyfr.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B9E6C0695D966DF49A1D957F85B8EFBE /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 812B5BBB082AC7E975161F553B13C145 /* Build configuration list for PBXProject "Seyfr" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 335AA54A982FBB0665CF287C79B52C03;
+			productRefGroup = D9C2507E655FC2D06DB665B061F978F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2BE3E268617E7C1140FC713330F5C911 /* Seyfr */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1AC9C2D1483BA5C2979C175F399A43F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A3A425D25D68D966B2B3D02740F79909 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E34542FDF0FDADAB53D29996E1F744DC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E2F8F6A3458CCE3104D790B1F4932114 /* seyfr_core.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		434442F5B0B291D930D89173286709FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C885C6DD841C93F3B40130A906F08D0 /* SeyfrApp.swift in Sources */,
+				8786C97651A85A74170EC7DE5C502431 /* ContentView.swift in Sources */,
+				04C7A09ABA93330FA8C94820BEE5DF67 /* AppState.swift in Sources */,
+				46FC53553F94D807217362910FE8D69A /* seyfr_core.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7AC4D03A152153F4D6557B39EE1243F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"SystemConfiguration",
+					"-framework",
+					"Network",
+					"-framework",
+					"Security",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.seyfr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Seyfr-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		29AB0956C3915DA05751C64D90CA8380 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"SystemConfiguration",
+					"-framework",
+					"Network",
+					"-framework",
+					"Security",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.seyfr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Seyfr-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		853534D50C9FB501D06B0C9CE55D5E98 /* Build configuration list for PBXNativeTarget "Seyfr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AC4D03A152153F4D6557B39EE1243F0 /* Debug */,
+				29AB0956C3915DA05751C64D90CA8380 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		812B5BBB082AC7E975161F553B13C145 /* Build configuration list for PBXProject "Seyfr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AC4D03A152153F4D6557B39EE1243F0 /* Debug */,
+				29AB0956C3915DA05751C64D90CA8380 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B9E6C0695D966DF49A1D957F85B8EFBE /* Project object */;
+}
