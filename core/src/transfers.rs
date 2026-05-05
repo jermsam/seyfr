@@ -555,7 +555,10 @@ impl TransferEngine {
                         message: format!("export failed for '{}': {}", item.name, e),
                     })?;
 
-                    // Apply timestamps if available (our format)
+                    // Apply timestamps if available (our format).
+                    // Note: only file timestamps are preserved. Directory timestamps
+                    // are not captured because they change automatically when files
+                    // are written, making them unreliable to preserve.
                     if item.modified_at > 0 {
                         apply_timestamps(&file_dest, item);
                     }

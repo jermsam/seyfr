@@ -34,6 +34,18 @@ let node_id = core.node_id();
 - **Single File**: `BlobFormat::HashSeq` - Hash sequence with metadata JSON + file blob
 - **Folders**: `BlobFormat::HashSeq` - Hash sequence with metadata JSON + individual file blobs
 
+### Metadata Preservation
+
+Seyfr embeds a JSON metadata blob in every ticket, preserving the following for each file:
+
+- **Original filename** — restored on receive (no more `received_file`)
+- **File size** — used for accurate progress reporting
+- **Modification time** — restored using `filetime` crate
+- **MIME type** — detected from extension, stored for future use
+
+**Not preserved:** Directory timestamps are not captured because they change
+automatically when files are written into them, making them unreliable to restore.
+
 ## 🔐 Security Features
 
 All security validations are enforced at the core level. Unlike server-based file sharing apps, **Seyfr has no hard file size limits** because it's peer-to-peer: you're transferring between your own devices, not filling a company's servers.
