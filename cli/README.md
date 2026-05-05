@@ -32,7 +32,7 @@ seyfr send /path/to/file.txt --listen
 
 | Flag | Description |
 |---|---|
-| `--listen` | **Keep the node alive** after generating the ticket so the receiver can download. Without this, the process exits immediately and the transfer will fail. |
+| `--listen` | **Keep the node alive** after generating the ticket so the receiver can download. |
 | `-d, --data-dir <DIR>` | Directory for the iroh node store (default: `.seyfr`). |
 
 **Example output:**

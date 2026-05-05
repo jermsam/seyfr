@@ -269,8 +269,8 @@ impl TransferEngine {
         match ticket.format() {
             BlobFormat::HashSeq => {
                 // Folder transfer: first download the collection hash sequence
-                // Query size before downloading for proper progress reporting
-                let collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
+                // Query size dynamically during download — store learns total from protocol
+                let mut collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
                 
                 let download_progress = downloader.download(ticket.hash(), Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
@@ -281,7 +281,10 @@ impl TransferEngine {
                     let event_str = format!("{:?}", event);
                     
                     if event_str.starts_with("Progress(") {
-                        // Progress event - extract bytes downloaded and report with total
+                        // Re-query size as store may learn total from protocol during download
+                        if collection_size == 0 {
+                            collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
+                        }
                         if let Some(p) = progress {
                             if let Some(current) = parse_progress_bytes(&event_str) {
                                 p.on_file_progress("collection".to_string(), current, collection_size);
@@ -311,8 +314,8 @@ impl TransferEngine {
                     message: "empty collection".to_string(),
                 })?;
 
-                // Download and parse metadata
-                let meta_size = get_blob_size(store.blobs(), meta_hash).await.unwrap_or(0);
+                // Download and parse metadata — query size dynamically
+                let mut meta_size = get_blob_size(store.blobs(), meta_hash).await.unwrap_or(0);
                 
                 let download_progress = downloader.download(meta_hash, Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
@@ -323,7 +326,9 @@ impl TransferEngine {
                     let event_str = format!("{:?}", event);
                     
                     if event_str.starts_with("Progress(") {
-                        // Metadata download progress with proper total
+                        if meta_size == 0 {
+                            meta_size = get_blob_size(store.blobs(), meta_hash).await.unwrap_or(0);
+                        }
                         if let Some(p) = progress {
                             if let Some(current) = parse_progress_bytes(&event_str) {
                                 p.on_file_progress("metadata".to_string(), current, meta_size);
@@ -364,9 +369,8 @@ impl TransferEngine {
                         p.on_file_start(name.clone(), (idx + 1) as u64, total);
                     }
 
-                    // Download the blob with progress
-                    // Query size first for proper progress reporting
-                    let file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
+                    // Download the blob with progress — query size dynamically
+                    let mut file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
                     
                     let download_progress = downloader.download(hash, Some(ticket.addr().id));
                     let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
@@ -377,7 +381,9 @@ impl TransferEngine {
                         let event_str = format!("{:?}", event);
                         
                         if event_str.starts_with("Progress(") {
-                            // File download progress with proper total size
+                            if file_size == 0 {
+                                file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
+                            }
                             if let Some(p) = progress {
                                 if let Some(current) = parse_progress_bytes(&event_str) {
                                     p.on_file_progress(name.clone(), current, file_size);
@@ -414,8 +420,8 @@ impl TransferEngine {
                     p.on_file_start("file".to_string(), 1, 1);
                 }
 
-                // Query size first for proper progress reporting
-                let file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
+                // Query size dynamically during download
+                let mut file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
                 
                 let download_progress = downloader.download(hash, Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
@@ -426,7 +432,9 @@ impl TransferEngine {
                     let event_str = format!("{:?}", event);
                     
                     if event_str.starts_with("Progress(") {
-                        // Single file download progress with proper total size
+                        if file_size == 0 {
+                            file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
+                        }
                         if let Some(p) = progress {
                             if let Some(current) = parse_progress_bytes(&event_str) {
                                 p.on_file_progress("file".to_string(), current, file_size);
