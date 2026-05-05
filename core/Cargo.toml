@@ -9,7 +9,9 @@ crate-type = ["cdylib", "staticlib", "lib"]
 [dependencies]
 uniffi = { version = "0.31.1", features = ["wasm-unstable-single-threaded"] }
 thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+bytes = "1"
 anyhow = "1.0"
 iroh = "0.98.2"
 iroh-blobs = { version = "0.100.0", features = ["fs-store"] }
@@ -17,6 +19,8 @@ tokio = { version = "1.52.1", features = ["full"] }
 futures-util = "0.3"
 postcard = "1.0"
 path_jail = "0.2"
+filetime = "0.2"
+mime_guess = "2.0"
 
 [dev-dependencies]
 tempfile = "3"

@@ -1,10 +1,11 @@
 pub use crate::walker::collect_files;
 
 use std::path::PathBuf;
+use std::time::SystemTime;
 
+use bytes::Bytes;
 use iroh::{Endpoint, protocol::Router};
 use iroh_blobs::{BlobsProtocol, BlobFormat, ticket::BlobTicket};
-use iroh_blobs::format::collection::Collection;
 use iroh_blobs::hashseq::HashSeq;
 use crate::errors::SeyfrError;
 use crate::progress::ProgressSink;
@@ -49,6 +50,67 @@ fn validate_dest_dir(dest_dir: &str) -> Result<Jail, SeyfrError> {
     })
 }
 
+// ── Seyfr metadata format ─────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SeyfrKind {
+    File,
+    Folder,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct SeyfrItem {
+    pub name: String,
+    pub size: u64,
+    pub created_at: u64,
+    pub modified_at: u64,
+    pub mime_type: String,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct SeyfrMetadata {
+    pub version: String,
+    pub kind: SeyfrKind,
+    pub items: Vec<SeyfrItem>,
+}
+
+/// Store raw bytes in the blob store and return the content hash.
+async fn store_bytes(
+    store: &iroh_blobs::api::Store,
+    bytes: Vec<u8>,
+) -> Result<iroh_blobs::Hash, SeyfrError> {
+    let import = store.blobs().add_bytes(Bytes::from(bytes));
+    let mut stream = import.stream().await;
+    while let Some(item) = stream.next().await {
+        match item {
+            iroh_blobs::api::blobs::AddProgressItem::Done(mut tag) => {
+                let hash = tag.hash();
+                tag.leak();
+                return Ok(hash);
+            }
+            iroh_blobs::api::blobs::AddProgressItem::Error(e) => {
+                return Err(SeyfrError::Store {
+                    message: format!("add bytes error: {}", e),
+                });
+            }
+            _ => {}
+        }
+    }
+    Err(SeyfrError::Store {
+        message: "add_bytes stream ended without Done".to_string(),
+    })
+}
+
+/// Apply timestamps to a file from a SeyfrItem.
+fn apply_timestamps(path: &std::path::Path, item: &SeyfrItem) {
+    let mtime = filetime::FileTime::from_unix_time(item.modified_at as i64, 0);
+    let atime = filetime::FileTime::from_unix_time(item.modified_at as i64, 0);
+    if let Err(e) = filetime::set_file_times(path, atime, mtime) {
+        eprintln!("Warning: could not set timestamps for {}: {}", item.name, e);
+    }
+}
+
 /// Shared inner state for the transfer engine.
 pub struct TransferEngine {
     pub endpoint: Endpoint,
@@ -84,26 +146,73 @@ fn resolve_file_path(path: &str) -> Result<(PathBuf, String), SeyfrError> {
 }
 
 impl TransferEngine {
-    /// Send a single file. Returns a compact `BlobTicket` (Raw format).
+    /// Send a single file. Returns a `BlobTicket` (HashSeq format with metadata).
     pub async fn send_file(
         &self,
         path: &str,
         progress: Option<&dyn ProgressSink>,
     ) -> Result<String, SeyfrError> {
         let (src, file_name) = resolve_file_path(path)?;
+        let file_meta = std::fs::metadata(&src)?;
 
         if let Some(p) = progress {
             p.on_file_start(file_name.clone(), 1, 1);
         }
 
-        let tag = self.blobs.add_path(src).await.map_err(|e| SeyfrError::Store {
+        // Compute metadata before add_path consumes src
+        let mime_type = mime_guess::from_path(&src).first_or_octet_stream().to_string();
+
+        // 1. Import file into blob store
+        let file_tag = self.blobs.add_path(src).await.map_err(|e| SeyfrError::Store {
             message: format!("failed to import file: {}", e),
         })?;
+        let file_hash = file_tag.hash;
 
+        // 2. Build metadata JSON blob
+        let created_at = file_meta
+            .created()
+            .unwrap_or_else(|_| SystemTime::now())
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+        let modified_at = file_meta
+            .modified()
+            .unwrap_or_else(|_| SystemTime::now())
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+
+        let seyfr_meta = SeyfrMetadata {
+            version: "seyfr-v1".to_string(),
+            kind: SeyfrKind::File,
+            items: vec![SeyfrItem {
+                name: file_name.clone(),
+                size: file_meta.len(),
+                created_at,
+                modified_at,
+                mime_type,
+            }],
+        };
+        let meta_json = serde_json::to_vec(&seyfr_meta).map_err(|e| SeyfrError::Store {
+            message: format!("failed to serialize metadata: {}", e),
+        })?;
+
+        // 3. Store metadata blob
+        let store = self.blobs.store();
+        let meta_hash = store_bytes(&store, meta_json).await?;
+
+        // 4. Build HashSeq: [metadata_hash, file_hash]
+        let hash_seq: HashSeq = std::iter::once(meta_hash)
+            .chain(std::iter::once(file_hash))
+            .collect();
+        let hash_seq_bytes = hash_seq.into_inner().to_vec();
+
+        // 5. Store HashSeq and create ticket
+        let root_hash = store_bytes(&store, hash_seq_bytes).await?;
         let ticket = BlobTicket::new(
             self.router.endpoint().addr(),
-            tag.hash,
-            BlobFormat::Raw,
+            root_hash,
+            BlobFormat::HashSeq,
         );
 
         if let Some(p) = progress {
@@ -189,7 +298,9 @@ impl TransferEngine {
             }
         }
 
-        let mut collection = Collection::default();
+        // Collect file hashes and metadata
+        let mut items = Vec::new();
+        let mut file_hashes = Vec::new();
 
         let results: Vec<_> = stream::iter(files)
             .map(|file_path| async {
@@ -198,11 +309,26 @@ impl TransferEngine {
                     .expect("collect_files only returns paths under the root");
                 let rel_str = rel.to_string_lossy().to_string();
 
+                let file_meta = std::fs::metadata(&file_path)?;
+                let mime_type = mime_guess::from_path(&file_path).first_or_octet_stream().to_string();
+                let created_at = file_meta
+                    .created()
+                    .unwrap_or_else(|_| SystemTime::now())
+                    .duration_since(SystemTime::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs();
+                let modified_at = file_meta
+                    .modified()
+                    .unwrap_or_else(|_| SystemTime::now())
+                    .duration_since(SystemTime::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs();
+
                 let tag = self.blobs.add_path(file_path).await.map_err(|e| SeyfrError::Store {
                     message: format!("failed to import '{}': {}", rel_str, e),
                 })?;
 
-                Ok::<_, SeyfrError>((rel_str, tag.hash))
+                Ok::<_, SeyfrError>((rel_str, tag.hash, file_meta.len(), created_at, modified_at, mime_type))
             })
             .buffer_unordered(4)
             .collect()
@@ -210,24 +336,47 @@ impl TransferEngine {
 
         let mut completed = 0u64;
         for res in results {
-            let (rel_str, hash) = res?;
+            let (rel_str, hash, size, created_at, modified_at, mime_type) = res?;
             completed += 1;
-            collection.push(rel_str.clone(), hash);
+            items.push(SeyfrItem {
+                name: rel_str.clone(),
+                size,
+                created_at,
+                modified_at,
+                mime_type,
+            });
+            file_hashes.push(hash);
 
             if let Some(p) = progress {
                 p.on_file_complete(rel_str, completed, total);
             }
         }
 
-        let store = self.blobs.store();
-        let mut root_tag = collection.store(&store).await.map_err(|e| SeyfrError::Store {
-            message: format!("failed to store collection: {}", e),
+        // Build metadata JSON blob
+        let seyfr_meta = SeyfrMetadata {
+            version: "seyfr-v1".to_string(),
+            kind: SeyfrKind::Folder,
+            items,
+        };
+        let meta_json = serde_json::to_vec(&seyfr_meta).map_err(|e| SeyfrError::Store {
+            message: format!("failed to serialize metadata: {}", e),
         })?;
-        root_tag.leak();
 
+        // Store metadata blob
+        let store = self.blobs.store();
+        let meta_hash = store_bytes(&store, meta_json).await?;
+
+        // Build HashSeq: [metadata_hash, file1_hash, file2_hash, ...]
+        let hash_seq: HashSeq = std::iter::once(meta_hash)
+            .chain(file_hashes.into_iter())
+            .collect();
+        let hash_seq_bytes = hash_seq.into_inner().to_vec();
+
+        // Store HashSeq and create ticket
+        let root_hash = store_bytes(&store, hash_seq_bytes).await?;
         let ticket = BlobTicket::new(
             self.router.endpoint().addr(),
-            root_tag.hash(),
+            root_hash,
             BlobFormat::HashSeq,
         );
 
@@ -238,15 +387,13 @@ impl TransferEngine {
         Ok(ticket.to_string())
     }
 
-    /// Receive from a ticket. Supports both Raw (single file) and HashSeq (folder).
+    /// Receive from a ticket. Supports Raw (legacy) and HashSeq (file or folder with metadata).
     /// 
     /// # Progress Reporting
     /// - **File-level**: `on_file_start`, `on_file_complete`, `on_complete` 
     /// - **Byte-level**: `on_file_progress(name, current_bytes, total_bytes)` - full progress
     /// 
-    /// Before each download, queries `store.blobs().status(hash)` to get total size,
-    /// then uses `DownloadProgressItem::Progress(u64)` stream for current bytes.
-    /// This enables proper progress bars with percentages in the UI.
+    /// Preserves original filenames, timestamps, and MIME types when available.
     pub async fn receive(
         &self,
         ticket_str: &str,
@@ -268,8 +415,7 @@ impl TransferEngine {
 
         match ticket.format() {
             BlobFormat::HashSeq => {
-                // Folder transfer: first download the collection hash sequence
-                // Query size dynamically during download — store learns total from protocol
+                // Download HashSeq root (contains metadata hash + file hashes)
                 let mut collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
                 
                 let download_progress = downloader.download(ticket.hash(), Some(ticket.addr().id));
@@ -281,13 +427,12 @@ impl TransferEngine {
                     let event_str = format!("{:?}", event);
                     
                     if event_str.starts_with("Progress(") {
-                        // Re-query size as store may learn total from protocol during download
                         if collection_size == 0 {
                             collection_size = get_blob_size(store.blobs(), ticket.hash()).await.unwrap_or(0);
                         }
                         if let Some(p) = progress {
                             if let Some(current) = parse_progress_bytes(&event_str) {
-                                p.on_file_progress("collection".to_string(), current, collection_size);
+                                p.on_file_progress("metadata".to_string(), current, collection_size);
                             }
                         }
                     } else if event_str.contains("AllDone") || event_str.contains("Done") {
@@ -301,20 +446,20 @@ impl TransferEngine {
 
                 // Read the hash sequence bytes
                 let hs_bytes = store.blobs().get_bytes(ticket.hash()).await.map_err(|e| SeyfrError::Store {
-                    message: format!("failed to read collection: {}", e),
+                    message: format!("failed to read hash sequence: {}", e),
                 })?;
 
                 let hash_seq = HashSeq::try_from(hs_bytes).map_err(|e| SeyfrError::Store {
                     message: format!("invalid hash sequence: {}", e),
                 })?;
 
-                // First hash is the metadata
+                // First hash is the metadata blob
                 let mut hashes = hash_seq.iter();
                 let meta_hash = hashes.next().ok_or_else(|| SeyfrError::Store {
-                    message: "empty collection".to_string(),
+                    message: "empty hash sequence".to_string(),
                 })?;
 
-                // Download and parse metadata — query size dynamically
+                // Download metadata blob
                 let mut meta_size = get_blob_size(store.blobs(), meta_hash).await.unwrap_or(0);
                 
                 let download_progress = downloader.download(meta_hash, Some(ticket.addr().id));
@@ -338,7 +483,7 @@ impl TransferEngine {
                         break;
                     } else if event_str.contains("Error") || event_str.contains("Abort") {
                         return Err(SeyfrError::Network {
-                            message: format!("failed to download collection metadata: {}", event_str),
+                            message: format!("failed to download metadata: {}", event_str),
                         });
                     }
                 }
@@ -347,17 +492,23 @@ impl TransferEngine {
                     message: format!("failed to read metadata: {}", e),
                 })?;
 
-                let meta: iroh_blobs::format::collection::CollectionMeta = postcard::from_bytes(&meta_bytes).map_err(|e| SeyfrError::Store {
-                    message: format!("failed to parse metadata: {}", e),
+                // Parse our SeyfrMetadata JSON format
+                let seyfr_meta: SeyfrMetadata = serde_json::from_slice(&meta_bytes).map_err(|e| SeyfrError::Store {
+                    message: format!("invalid metadata format: {}", e),
                 })?;
+                let items = seyfr_meta.items;
 
-                let total = meta.names().len() as u64;
+                let total = items.len() as u64;
 
                 // Download and export each file
-                for (idx, (name, hash)) in meta.names().iter().zip(hashes).enumerate() {
-                    // Use jail.join() for secure path validation - prevents path traversal
-                    let file_dest = jail.join(name).map_err(|e| SeyfrError::PathTraversal {
-                        path: name.clone(),
+                for (idx, item) in items.iter().enumerate() {
+                    let hash = hashes.next().ok_or_else(|| SeyfrError::Store {
+                        message: format!("missing hash for file: {}", item.name),
+                    })?;
+
+                    // Use jail.join() for secure path validation
+                    let file_dest = jail.join(&item.name).map_err(|e| SeyfrError::PathTraversal {
+                        path: item.name.clone(),
                         message: format!("{}", e),
                     })?;
                     
@@ -366,50 +517,61 @@ impl TransferEngine {
                     }
 
                     if let Some(p) = progress {
-                        p.on_file_start(name.clone(), (idx + 1) as u64, total);
+                        p.on_file_start(item.name.clone(), (idx + 1) as u64, total);
                     }
 
-                    // Download the blob with progress — query size dynamically
-                    let mut file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
+                    // Download the blob with progress — use known size from metadata
+                    let file_size = if item.size > 0 {
+                        item.size
+                    } else {
+                        get_blob_size(store.blobs(), hash).await.unwrap_or(0)
+                    };
                     
                     let download_progress = downloader.download(hash, Some(ticket.addr().id));
                     let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
-                        message: format!("failed to start download for '{}': {}", name, e),
+                        message: format!("failed to start download for '{}': {}", item.name, e),
                     })?;
                     
                     while let Some(event) = stream.next().await {
                         let event_str = format!("{:?}", event);
                         
                         if event_str.starts_with("Progress(") {
-                            if file_size == 0 {
-                                file_size = get_blob_size(store.blobs(), hash).await.unwrap_or(0);
-                            }
                             if let Some(p) = progress {
                                 if let Some(current) = parse_progress_bytes(&event_str) {
-                                    p.on_file_progress(name.clone(), current, file_size);
+                                    p.on_file_progress(item.name.clone(), current, file_size);
                                 }
                             }
                         } else if event_str.contains("AllDone") || event_str.contains("Done") {
                             break;
                         } else if event_str.contains("Error") || event_str.contains("Abort") {
                             return Err(SeyfrError::Network {
-                                message: format!("download failed for '{}': {}", name, event_str),
+                                message: format!("download failed for '{}': {}", item.name, event_str),
                             });
                         }
                     }
 
                     // Export to destination
                     store.blobs().export(hash, &file_dest).await.map_err(|e| SeyfrError::Store {
-                        message: format!("export failed for '{}': {}", name, e),
+                        message: format!("export failed for '{}': {}", item.name, e),
                     })?;
 
+                    // Apply timestamps if available (our format)
+                    if item.modified_at > 0 {
+                        apply_timestamps(&file_dest, item);
+                    }
+
                     if let Some(p) = progress {
-                        p.on_file_complete(name.clone(), (idx + 1) as u64, total);
+                        p.on_file_complete(item.name.clone(), (idx + 1) as u64, total);
                     }
                 }
 
                 if let Some(p) = progress {
-                    p.on_complete(format!("Folder received: {} items", total));
+                    let message = if total == 1 {
+                        "File received successfully".to_string()
+                    } else {
+                        format!("Folder received: {} items", total)
+                    };
+                    p.on_complete(message);
                 }
             }
             BlobFormat::Raw => {
