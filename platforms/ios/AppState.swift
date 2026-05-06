@@ -11,7 +11,8 @@ enum TransferStatus: Equatable {
 @MainActor
 class AppState: ObservableObject {
     @Published var ticket: String = ""
-    @Published var status: TransferStatus = .idle
+    @Published var sendStatus: TransferStatus = .idle
+    @Published var receiveStatus: TransferStatus = .idle
     @Published var selectedFileName: String?
     @Published var destinationURL: URL?
 
@@ -34,24 +35,24 @@ class AppState: ObservableObject {
 
     func send(url: URL) {
         guard url.startAccessingSecurityScopedResource() else {
-            status = .error("Cannot access file")
+            sendStatus = .error("Cannot access file")
             return
         }
         defer { url.stopAccessingSecurityScopedResource() }
 
         selectedFileName = url.lastPathComponent
-        status = .sending
+        sendStatus = .sending
 
         Task {
             do {
                 let result = try core.send(path: url.path, progress: nil)
                 await MainActor.run {
                     ticket = result
-                    status = .success("Ready to share")
+                    sendStatus = .success("Ready to share")
                 }
             } catch {
                 await MainActor.run {
-                    status = .error(error.localizedDescription)
+                    sendStatus = .error(error.localizedDescription)
                 }
             }
         }
@@ -59,22 +60,22 @@ class AppState: ObservableObject {
 
     func receive(ticket: String) {
         guard !ticket.isEmpty else {
-            status = .error("Ticket is empty")
+            receiveStatus = .error("Ticket is empty")
             return
         }
 
         let dest = destinationURL?.path ?? (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("received").path ?? "/tmp/received")
 
-        status = .receiving
+        receiveStatus = .receiving
         Task {
             do {
                 try core.receive(ticket: ticket, destDir: dest, progress: nil)
                 await MainActor.run {
-                    status = .success("Received successfully")
+                    receiveStatus = .success("Received successfully")
                 }
             } catch {
                 await MainActor.run {
-                    status = .error(error.localizedDescription)
+                    receiveStatus = .error(error.localizedDescription)
                 }
             }
         }
@@ -87,6 +88,6 @@ class AppState: ObservableObject {
     func clearSend() {
         ticket = ""
         selectedFileName = nil
-        status = .idle
+        sendStatus = .idle
     }
 }

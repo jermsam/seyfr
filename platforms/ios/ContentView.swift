@@ -77,7 +77,7 @@ struct ContentView: View {
                         appState.send(url: url)
                     }
                 case .failure(let error):
-                    appState.status = .error(error.localizedDescription)
+                    appState.sendStatus = .error(error.localizedDescription)
                 }
             }
             .sheet(isPresented: $showingShareSheet) {
@@ -137,7 +137,7 @@ struct SendView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 32) {
-                if case .idle = appState.status, appState.selectedFileName == nil {
+                if case .idle = appState.sendStatus, appState.selectedFileName == nil {
                     VStack(spacing: 0) {
                         Button {
                             if isFolderMode {
@@ -183,7 +183,7 @@ struct SendView: View {
                             .foregroundStyle(.primary)
                             .padding(.horizontal, 20)
 
-                        FileCard(fileName: fileName, isLoading: appState.status == .sending)
+                        FileCard(fileName: fileName, isLoading: appState.sendStatus == .sending)
                             .padding(.horizontal, 20)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
@@ -238,7 +238,7 @@ struct SendView: View {
                             SecondaryButton(title: "Copy", icon: "doc.on.doc") {
                                 UIPasteboard.general.string = appState.ticket
                                 withAnimation(.spring()) {
-                                    appState.status = .success("Copied to clipboard")
+                                    appState.sendStatus = .success("Copied to clipboard")
                                 }
                             }
 
@@ -256,12 +256,12 @@ struct SendView: View {
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
 
-                StatusPill(status: appState.status)
+                StatusPill(status: appState.sendStatus)
                     .padding(.horizontal, 20)
             }
             .padding(.vertical, 20)
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.status)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.sendStatus)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.ticket)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.selectedFileName)
     }
@@ -429,12 +429,12 @@ struct ReceiveView: View {
                 .disabled(ticketInput.isEmpty)
                 .padding(.horizontal, 20)
 
-                StatusPill(status: appState.status)
+                StatusPill(status: appState.receiveStatus)
                     .padding(.horizontal, 20)
             }
             .padding(.vertical, 20)
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.status)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: appState.receiveStatus)
     }
 }
 
