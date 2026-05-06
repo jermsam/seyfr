@@ -883,9 +883,8 @@ fileprivate struct UniffiCallbackInterfaceProgressSink {
     // Create the VTable using a series of closures.
     // Swift automatically converts these into C callback functions.
     //
-    // This creates 1-element array, since this seems to be the only way to construct a const
-    // pointer that we can pass to the Rust code.
-    static let vtable: [UniffiVTableCallbackInterfaceProgressSink] = [UniffiVTableCallbackInterfaceProgressSink(
+    // Store the vtable directly.
+    static let vtable: UniffiVTableCallbackInterfaceProgressSink = UniffiVTableCallbackInterfaceProgressSink(
         uniffiFree: { (uniffiHandle: UInt64) -> () in
             do {
                 try FfiConverterCallbackInterfaceProgressSink.handleMap.remove(handle: uniffiHandle)
@@ -1032,11 +1031,19 @@ fileprivate struct UniffiCallbackInterfaceProgressSink {
                 writeReturn: writeReturn
             )
         }
-    )]
+    )
+
+    // Rust stores this pointer for future callback invocations, so it must live
+    // for the process lifetime (not just for the init function call).
+    nonisolated(unsafe) static let vtablePtr: UnsafePointer<UniffiVTableCallbackInterfaceProgressSink> = {
+        let ptr = UnsafeMutablePointer<UniffiVTableCallbackInterfaceProgressSink>.allocate(capacity: 1)
+        ptr.initialize(to: vtable)
+        return UnsafePointer(ptr)
+    }()
 }
 
 private func uniffiCallbackInitProgressSink() {
-    uniffi_seyfr_core_fn_init_callback_vtable_progresssink(UniffiCallbackInterfaceProgressSink.vtable)
+    uniffi_seyfr_core_fn_init_callback_vtable_progresssink(UniffiCallbackInterfaceProgressSink.vtablePtr)
 }
 
 // FfiConverter protocol for callback interfaces
