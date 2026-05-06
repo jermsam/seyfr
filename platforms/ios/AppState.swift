@@ -30,7 +30,7 @@ class AppState: ObservableObject {
             fatalError("Failed to initialize Seyfr core: \(error)")
         }
 
-        self.destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Downloads")
+        self.destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
     }
 
     func send(url: URL) {
