@@ -336,15 +336,15 @@ struct ReceiveView: View {
                             }
 
                             Button {
-                                showingQRScanner = true
+                                ticketInput = ""
                             } label: {
                                 HStack(spacing: 4) {
-                                    Image(systemName: "qrcode.viewfinder")
+                                    Image(systemName: "xmark.circle.fill")
                                         .font(.system(size: 12, weight: .medium))
-                                    Text("Scan")
+                                    Text("Clear")
                                         .font(.system(size: 12, weight: .medium))
                                 }
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(.secondary)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 6)
                                 .background(
