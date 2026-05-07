@@ -1,36 +1,36 @@
 /// Error taxonomy with structured, actionable messages.
 #[derive(Debug, uniffi::Error)]
 pub enum SeyfrError {
-    Io { message: String },
-    InvalidTicket { message: String },
-    Network { message: String },
-    Store { message: String },
+    Io { details: String },
+    InvalidTicket { details: String },
+    Network { details: String },
+    Store { details: String },
     Cancelled,
     FileNotFound { path: String },
     NotADirectory { path: String },
     EmptyFolder { path: String },
     Timeout,
-    Internal { message: String },
-    PathTraversal { path: String, message: String },
-    InvalidPath { message: String },
+    Internal { details: String },
+    PathTraversal { path: String, details: String },
+    InvalidPath { details: String },
 }
 
 
 impl std::fmt::Display for SeyfrError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SeyfrError::Io { message } => write!(f, "io error: {}", message),
-            SeyfrError::InvalidTicket { message } => write!(f, "invalid ticket: {}", message),
-            SeyfrError::Network { message } => write!(f, "network error: {}", message),
-            SeyfrError::Store { message } => write!(f, "store error: {}", message),
+            SeyfrError::Io { details } => write!(f, "io error: {}", details),
+            SeyfrError::InvalidTicket { details } => write!(f, "invalid ticket: {}", details),
+            SeyfrError::Network { details } => write!(f, "network error: {}", details),
+            SeyfrError::Store { details } => write!(f, "store error: {}", details),
             SeyfrError::Cancelled => write!(f, "transfer cancelled"),
             SeyfrError::FileNotFound { path } => write!(f, "file not found: {}", path),
             SeyfrError::NotADirectory { path } => write!(f, "not a directory: {}", path),
             SeyfrError::EmptyFolder { path } => write!(f, "empty folder: {}", path),
             SeyfrError::Timeout => write!(f, "transfer timeout"),
-            SeyfrError::Internal { message } => write!(f, "internal error: {}", message),
-            SeyfrError::PathTraversal { path, message } => write!(f, "path traversal attempt: {} - {}", path, message),
-            SeyfrError::InvalidPath { message } => write!(f, "invalid path: {}", message),
+            SeyfrError::Internal { details } => write!(f, "internal error: {}", details),
+            SeyfrError::PathTraversal { path, details } => write!(f, "path traversal attempt: {} - {}", path, details),
+            SeyfrError::InvalidPath { details } => write!(f, "invalid path: {}", details),
         }
     }
 }
@@ -59,7 +59,7 @@ impl SeyfrError {
 impl From<std::io::Error> for SeyfrError {
     fn from(e: std::io::Error) -> Self {
         SeyfrError::Io {
-            message: e.to_string(),
+            details: e.to_string(),
         }
     }
 }

@@ -53,7 +53,7 @@ pub async fn collect_files(dir: &Path) -> Result<Vec<PathBuf>, SeyfrError> {
     })
     .await
     .map_err(|e| SeyfrError::Internal {
-        message: e.to_string(),
+        details: e.to_string(),
     })?
 }
 

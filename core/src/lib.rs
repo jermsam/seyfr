@@ -36,24 +36,24 @@ impl Core {
             .enable_all()
             .build()
             .map_err(|e| SeyfrError::Internal {
-                message: format!("failed to create Tokio runtime: {}", e),
+                details: format!("failed to create Tokio runtime: {}", e),
             })?;
 
         let engine = runtime.block_on(async {
             let data_path = PathBuf::from(data_dir);
             tokio::fs::create_dir_all(&data_path)
                 .await
-                .map_err(|e| SeyfrError::Io { message: e.to_string() })?;
+                .map_err(|e| SeyfrError::Io { details: e.to_string() })?;
 
             let store = iroh_blobs::store::fs::FsStore::load(&data_path)
                 .await
                 .map_err(|e| SeyfrError::Store {
-                    message: format!("failed to load FsStore: {}", e),
+                    details: format!("failed to load FsStore: {}", e),
                 })?;
 
             let endpoint = iroh::Endpoint::bind(iroh::endpoint::presets::N0)
                 .await
-                .map_err(|e| SeyfrError::Network { message: e.to_string() })?;
+                .map_err(|e| SeyfrError::Network { details: e.to_string() })?;
 
             let blobs = iroh_blobs::BlobsProtocol::new(&store, None);
 

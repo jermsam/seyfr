@@ -25,11 +25,11 @@ impl ProgressSink for TestProgress {
         self.file_completes.lock().unwrap().push((name, current, total));
     }
 
-    fn on_complete(&self, message: String) {
-        self.completes.lock().unwrap().push(message);
+    fn on_complete(&self, details: String) {
+        self.completes.lock().unwrap().push(details);
     }
 
-    fn on_error(&self, message: String) {
-        self.errors.lock().unwrap().push(message);
+    fn on_error(&self, details: String) {
+        self.errors.lock().unwrap().push(details);
     }
 }

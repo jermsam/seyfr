@@ -1,2 +1,5 @@
 [bindings.csharp]
 cdylib_name = "seyfr_core"
+
+[bindings.kotlin]
+android_cleaner = true

@@ -16,9 +16,9 @@ pub trait ProgressSink: Send + Sync {
     fn on_file_complete(&self, file_name: String, file_index: u64, total_files: u64);
 
     /// Called when the entire transfer completes.
-    fn on_complete(&self, message: String);
+    fn on_complete(&self, details: String);
 
     /// Called on any error with a human-readable message.
-    fn on_error(&self, message: String);
+    fn on_error(&self, details: String);
 }
 

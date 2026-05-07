@@ -46,7 +46,7 @@ async fn get_blob_size(
 fn validate_dest_dir(dest_dir: &str) -> Result<Jail, SeyfrError> {
     // Create jail - this validates the path and resolves symlinks
     Jail::new(dest_dir).map_err(|e| SeyfrError::InvalidPath {
-        message: format!("invalid destination directory: {}", e),
+        details: format!("invalid destination directory: {}", e),
     })
 }
 
@@ -91,14 +91,14 @@ async fn store_bytes(
             }
             iroh_blobs::api::blobs::AddProgressItem::Error(e) => {
                 return Err(SeyfrError::Store {
-                    message: format!("add bytes error: {}", e),
+                    details: format!("add bytes error: {}", e),
                 });
             }
             _ => {}
         }
     }
     Err(SeyfrError::Store {
-        message: "add_bytes stream ended without Done".to_string(),
+        details: "add_bytes stream ended without Done".to_string(),
     })
 }
 
@@ -135,7 +135,7 @@ fn resolve_file_path(path: &str) -> Result<(PathBuf, String), SeyfrError> {
     })?;
     if !metadata.is_file() {
         return Err(SeyfrError::Io {
-            message: format!("expected a file, got non-file path: {}", path),
+            details: format!("expected a file, got non-file path: {}", path),
         });
     }
     let file_name = src
@@ -164,7 +164,7 @@ impl TransferEngine {
 
         // 1. Import file into blob store
         let file_tag = self.blobs.add_path(src).await.map_err(|e| SeyfrError::Store {
-            message: format!("failed to import file: {}", e),
+            details: format!("failed to import file: {}", e),
         })?;
         let file_hash = file_tag.hash;
 
@@ -194,7 +194,7 @@ impl TransferEngine {
             }],
         };
         let meta_json = serde_json::to_vec(&seyfr_meta).map_err(|e| SeyfrError::Store {
-            message: format!("failed to serialize metadata: {}", e),
+            details: format!("failed to serialize metadata: {}", e),
         })?;
 
         // 3. Store metadata blob
@@ -325,7 +325,7 @@ impl TransferEngine {
                     .as_secs();
 
                 let tag = self.blobs.add_path(file_path).await.map_err(|e| SeyfrError::Store {
-                    message: format!("failed to import '{}': {}", rel_str, e),
+                    details: format!("failed to import '{}': {}", rel_str, e),
                 })?;
 
                 Ok::<_, SeyfrError>((rel_str, tag.hash, file_meta.len(), created_at, modified_at, mime_type))
@@ -359,7 +359,7 @@ impl TransferEngine {
             items,
         };
         let meta_json = serde_json::to_vec(&seyfr_meta).map_err(|e| SeyfrError::Store {
-            message: format!("failed to serialize metadata: {}", e),
+            details: format!("failed to serialize metadata: {}", e),
         })?;
 
         // Store metadata blob
@@ -401,7 +401,7 @@ impl TransferEngine {
         progress: Option<&dyn ProgressSink>,
     ) -> Result<(), SeyfrError> {
         let ticket: BlobTicket = ticket_str.parse().map_err(|e| SeyfrError::InvalidTicket {
-            message: format!("{}", e),
+            details: format!("{}", e),
         })?;
 
         // Validate destination directory and create secure jail
@@ -420,7 +420,7 @@ impl TransferEngine {
                 
                 let download_progress = downloader.download(ticket.hash(), Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
-                    message: format!("failed to start download: {}", e),
+                    details: format!("failed to start download: {}", e),
                 })?;
                 
                 while let Some(event) = stream.next().await {
@@ -439,24 +439,24 @@ impl TransferEngine {
                         break;
                     } else if event_str.contains("Error") || event_str.contains("Abort") {
                         return Err(SeyfrError::Network {
-                            message: format!("download failed: {}", event_str),
+                            details: format!("download failed: {}", event_str),
                         });
                     }
                 }
 
                 // Read the hash sequence bytes
                 let hs_bytes = store.blobs().get_bytes(ticket.hash()).await.map_err(|e| SeyfrError::Store {
-                    message: format!("failed to read hash sequence: {}", e),
+                    details: format!("failed to read hash sequence: {}", e),
                 })?;
 
                 let hash_seq = HashSeq::try_from(hs_bytes).map_err(|e| SeyfrError::Store {
-                    message: format!("invalid hash sequence: {}", e),
+                    details: format!("invalid hash sequence: {}", e),
                 })?;
 
                 // First hash is the metadata blob
                 let mut hashes = hash_seq.iter();
                 let meta_hash = hashes.next().ok_or_else(|| SeyfrError::Store {
-                    message: "empty hash sequence".to_string(),
+                    details: "empty hash sequence".to_string(),
                 })?;
 
                 // Download metadata blob
@@ -464,7 +464,7 @@ impl TransferEngine {
                 
                 let download_progress = downloader.download(meta_hash, Some(ticket.addr().id));
                 let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
-                    message: format!("failed to start metadata download: {}", e),
+                    details: format!("failed to start metadata download: {}", e),
                 })?;
                 
                 while let Some(event) = stream.next().await {
@@ -483,18 +483,18 @@ impl TransferEngine {
                         break;
                     } else if event_str.contains("Error") || event_str.contains("Abort") {
                         return Err(SeyfrError::Network {
-                            message: format!("failed to download metadata: {}", event_str),
+                            details: format!("failed to download metadata: {}", event_str),
                         });
                     }
                 }
 
                 let meta_bytes = store.blobs().get_bytes(meta_hash).await.map_err(|e| SeyfrError::Store {
-                    message: format!("failed to read metadata: {}", e),
+                    details: format!("failed to read metadata: {}", e),
                 })?;
 
                 // Parse our SeyfrMetadata JSON format
                 let seyfr_meta: SeyfrMetadata = serde_json::from_slice(&meta_bytes).map_err(|e| SeyfrError::Store {
-                    message: format!("invalid metadata format: {}", e),
+                    details: format!("invalid metadata format: {}", e),
                 })?;
                 let items = seyfr_meta.items;
 
@@ -503,13 +503,13 @@ impl TransferEngine {
                 // Download and export each file
                 for (idx, item) in items.iter().enumerate() {
                     let hash = hashes.next().ok_or_else(|| SeyfrError::Store {
-                        message: format!("missing hash for file: {}", item.name),
+                        details: format!("missing hash for file: {}", item.name),
                     })?;
 
                     // Use jail.join() for secure path validation
                     let file_dest = jail.join(&item.name).map_err(|e| SeyfrError::PathTraversal {
                         path: item.name.clone(),
-                        message: format!("{}", e),
+                        details: format!("{}", e),
                     })?;
                     
                     if let Some(parent) = file_dest.parent() {
@@ -529,7 +529,7 @@ impl TransferEngine {
                     
                     let download_progress = downloader.download(hash, Some(ticket.addr().id));
                     let mut stream = download_progress.stream().await.map_err(|e| SeyfrError::Network {
-                        message: format!("failed to start download for '{}': {}", item.name, e),
+                        details: format!("failed to start download for '{}': {}", item.name, e),
                     })?;
                     
                     while let Some(event) = stream.next().await {
@@ -545,14 +545,14 @@ impl TransferEngine {
                             break;
                         } else if event_str.contains("Error") || event_str.contains("Abort") {
                             return Err(SeyfrError::Network {
-                                message: format!("download failed for '{}': {}", item.name, event_str),
+                                details: format!("download failed for '{}': {}", item.name, event_str),
                             });
                         }
                     }
 
                     // Export to destination
                     store.blobs().export(hash, &file_dest).await.map_err(|e| SeyfrError::Store {
-                        message: format!("export failed for '{}': {}", item.name, e),
+                        details: format!("export failed for '{}': {}", item.name, e),
                     })?;
 
                     // Apply timestamps if available (our format).
@@ -569,17 +569,17 @@ impl TransferEngine {
                 }
 
                 if let Some(p) = progress {
-                    let message = if total == 1 {
+                    let details = if total == 1 {
                         "File received successfully".to_string()
                     } else {
                         format!("Folder received: {} items", total)
                     };
-                    p.on_complete(message);
+                    p.on_complete(details);
                 }
             }
             BlobFormat::Raw => {
                 return Err(SeyfrError::InvalidTicket {
-                    message: "Raw format tickets are not supported — use HashSeq with metadata".to_string(),
+                    details: "Raw format tickets are not supported — use HashSeq with metadata".to_string(),
                 });
             }
         }
@@ -690,7 +690,7 @@ mod tests {
             let store = MemStore::new();
             
             let endpoint = Endpoint::bind(presets::N0).await.map_err(|e| SeyfrError::Network {
-                message: format!("failed to bind endpoint: {}", e),
+                details: format!("failed to bind endpoint: {}", e),
             })?;
             
             let blobs = BlobsProtocol::new(&store, None);
@@ -917,7 +917,7 @@ mod tests {
             lookup: MemoryLookup,
         ) -> Result<TransferEngine, SeyfrError> {
             let store = FsStore::load(&store_path).await.map_err(|e| SeyfrError::Store {
-                message: format!("failed to create store: {}", e),
+                details: format!("failed to create store: {}", e),
             })?;
             
             let endpoint = Endpoint::builder(presets::Minimal)
@@ -926,7 +926,7 @@ mod tests {
                 .bind()
                 .await
                 .map_err(|e| SeyfrError::Network {
-                    message: format!("failed to bind endpoint: {}", e),
+                    details: format!("failed to bind endpoint: {}", e),
                 })?;
             
             let blobs = BlobsProtocol::new(&store, None);
