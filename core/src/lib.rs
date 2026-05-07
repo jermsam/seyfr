@@ -3,6 +3,9 @@ mod progress;
 mod transfers;
 mod walker;
 
+#[cfg(target_os = "android")]
+mod android;
+
 #[cfg(test)]
 pub mod test_utils;
 
@@ -32,6 +35,18 @@ impl Core {
     /// `data_dir` is the iOS app sandbox path (e.g. `.../Library/Application Support/seyfr`).
     #[uniffi::constructor]
     pub fn new(data_dir: String) -> Result<Arc<Self>, SeyfrError> {
+        // On Android, use a simpler runtime configuration to avoid context initialization issues
+        #[cfg(target_os = "android")]
+        let runtime = Builder::new_multi_thread()
+            .worker_threads(2)
+            .enable_io()
+            .enable_time()
+            .build()
+            .map_err(|e| SeyfrError::Internal {
+                details: format!("failed to create Tokio runtime: {}", e),
+            })?;
+        
+        #[cfg(not(target_os = "android"))]
         let runtime = Builder::new_multi_thread()
             .enable_all()
             .build()
