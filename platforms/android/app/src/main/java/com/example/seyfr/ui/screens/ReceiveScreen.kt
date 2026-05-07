@@ -2,6 +2,8 @@ package com.example.seyfr.ui.screens
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.DocumentsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -71,6 +73,15 @@ fun ReceiveScreen(
     ) { isGranted ->
         if (isGranted) {
             showQRScanner = true
+        }
+    }
+
+    val folderPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let {
+            val path = resolveTreeUriToPath(context, it)
+            onSetDestination(path)
         }
     }
 
@@ -219,7 +230,7 @@ fun ReceiveScreen(
                         }
                     }
 
-                    TextButton(onClick = { /* TODO: Folder picker */ }) {
+                    TextButton(onClick = { folderPickerLauncher.launch(null) }) {
                         Text("Change")
                     }
                 }
@@ -270,6 +281,48 @@ fun ReceiveScreen(
             }
         )
     }
+}
+
+/**
+ * Resolve a Storage Access Framework (SAF) tree URI to a real filesystem path.
+ *
+ * This handles common document providers (Downloads, ExternalStorage) and falls
+ * back to creating a directory in app-private external storage when the URI
+ * cannot be directly mapped to a path (e.g., Google Drive, cloud providers).
+ */
+private fun resolveTreeUriToPath(context: android.content.Context, treeUri: Uri): String {
+    val docId = DocumentsContract.getTreeDocumentId(treeUri)
+
+    // Handle primary external storage (e.g., content://com.android.externalstorage.documents/tree/primary:Download)
+    if (docId.startsWith("primary:")) {
+        val relativePath = docId.removePrefix("primary:")
+        val base = android.os.Environment.getExternalStorageDirectory()
+        return java.io.File(base, relativePath).absolutePath
+    }
+
+    // Try to extract from content URI path segments
+    val path = treeUri.path
+    if (path != null) {
+        // Some providers encode the real path after /tree/ or /document/
+        val realPath = path
+            .replace("/tree/", "")
+            .replace("/document/", "")
+            .replaceFirst("primary:", "")
+        if (!realPath.startsWith("content:") && realPath.isNotBlank()) {
+            val base = android.os.Environment.getExternalStorageDirectory()
+            val candidate = java.io.File(base, realPath)
+            if (candidate.exists() || candidate.parentFile?.exists() == true) {
+                return candidate.absolutePath
+            }
+        }
+    }
+
+    // Fallback: create a named directory in app-private external storage
+    val fallbackDir = context.getExternalFilesDir(null)
+        ?.resolve("received")
+        ?.apply { mkdirs() }
+    return fallbackDir?.absolutePath
+        ?: context.filesDir.resolve("received").apply { mkdirs() }.absolutePath
 }
 
 @Composable
