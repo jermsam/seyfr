@@ -38,12 +38,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -67,6 +71,7 @@ fun ReceiveScreen(
     val clipboardManager = LocalClipboardManager.current
     var ticketInput by remember { mutableStateOf("") }
     var showQRScanner by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -85,10 +90,17 @@ fun ReceiveScreen(
         }
     }
 
+    LaunchedEffect(ticketInput) {
+        if (ticketInput.isNotEmpty()) {
+            delay(300)
+            scrollState.animateScrollTo(scrollState.maxValue)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(28.dp)
     ) {
@@ -176,9 +188,14 @@ fun ReceiveScreen(
                     onValueChange = { ticketInput = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp),
-                    placeholder = { Text("Paste ticket here...") },
+                        .height(80.dp),
+                    placeholder = { Text("Paste ticket here...", fontSize = 11.sp) },
                     shape = RoundedCornerShape(12.dp),
+                    textStyle = TextStyle(
+                        fontSize = 9.sp,
+                        fontFamily = FontFamily.Monospace,
+                        lineHeight = 11.sp
+                    ),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )

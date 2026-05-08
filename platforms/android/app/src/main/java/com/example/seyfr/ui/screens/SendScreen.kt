@@ -40,10 +40,12 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -68,6 +70,7 @@ fun SendScreen(
 ) {
     val context = LocalContext.current
     var isFolderMode by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     val filePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -95,7 +98,7 @@ fun SendScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
@@ -177,6 +180,13 @@ fun SendScreen(
             enter = slideInVertically() + fadeIn(),
             exit = slideOutVertically() + fadeOut()
         ) {
+            LaunchedEffect(uiState.ticket) {
+                if (uiState.ticket.isNotEmpty()) {
+                    delay(400)
+                    val target = (scrollState.value + 400).coerceAtMost(scrollState.maxValue)
+                    scrollState.animateScrollTo(target)
+                }
+            }
             Card(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 shape = RoundedCornerShape(20.dp),
@@ -216,10 +226,10 @@ fun SendScreen(
                     ) {
                         Text(
                             text = uiState.ticket,
-                            modifier = Modifier.padding(14.dp),
-                            fontSize = 12.sp,
+                            modifier = Modifier.padding(6.dp),
+                            fontSize = 9.sp,
                             fontFamily = FontFamily.Monospace,
-                            lineHeight = 18.sp
+                            lineHeight = 11.sp
                         )
                     }
 
