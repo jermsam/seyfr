@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "seyfr (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "seyfr (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
