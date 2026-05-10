@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Input;
 using uniffi.seyfr_core;
 
@@ -33,7 +34,9 @@ namespace Seyfr
 
         public AppViewModel()
         {
-            _core = new Core();
+            var dataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "seyfr");
+            Directory.CreateDirectory(dataDir);
+            _core = new Core(dataDir);
             Greeting = "_core.Greeting()";
             RefreshGreetingCommand = new RelayCommand(OnRefreshGreeting);
         }
