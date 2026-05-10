@@ -7,21 +7,31 @@ namespace Seyfr
 {
     public class TabBackgroundConverter : IValueConverter
     {
+        // Active Fluent blue
+        private static readonly SolidColorBrush ActiveBrush =
+            new SolidColorBrush(
+                Microsoft.UI.ColorHelper.FromArgb(255, 76, 132, 255)
+            );
+
+        // Soft inactive blue-gray
+        private static readonly SolidColorBrush InactiveBrush =
+            new SolidColorBrush(
+                Microsoft.UI.ColorHelper.FromArgb(255, 236, 243, 255)
+            );
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is TransferTab tab && parameter is string param)
             {
                 Enum.TryParse<TransferTab>(param, out var targetTab);
+
                 if (tab == targetTab)
                 {
-                    return new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                         Microsoft.UI.ColorHelper.FromArgb(255, 59, 130, 246)
-                    );
+                    return ActiveBrush;
                 }
             }
-            return new Microsoft.UI.Xaml.Media.SolidColorBrush(
-               Microsoft.UI.ColorHelper.FromArgb(255, 240, 240, 240)
-            );
+
+            return InactiveBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -30,21 +40,28 @@ namespace Seyfr
 
     public class TabForegroundConverter : IValueConverter
     {
+        private static readonly SolidColorBrush WhiteBrush =
+            new SolidColorBrush(Microsoft.UI.Colors.White);
+
+        // Softer dark gray for inactive tabs
+        private static readonly SolidColorBrush DarkBrush =
+            new SolidColorBrush(
+                Microsoft.UI.ColorHelper.FromArgb(255, 45, 45, 48)
+            );
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is TransferTab tab && parameter is string param)
             {
                 Enum.TryParse<TransferTab>(param, out var targetTab);
+
                 if (tab == targetTab)
                 {
-                    return new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.Colors.White
-                    );
+                    return WhiteBrush;
                 }
             }
-            return new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                Microsoft.UI.Colors.Black
-            );
+
+            return DarkBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -57,8 +74,11 @@ namespace Seyfr
         {
             if (value is TransferTab tab)
             {
-                return tab == TransferTab.Send ? "Send" : "Receive";
+                return tab == TransferTab.Send
+                    ? "Send"
+                    : "Receive";
             }
+
             return "";
         }
 
@@ -76,6 +96,7 @@ namespace Seyfr
                     ? "Send your files to any device"
                     : "Receive files from any device";
             }
+
             return "";
         }
 
@@ -90,8 +111,12 @@ namespace Seyfr
             if (value is TransferTab tab && parameter is string param)
             {
                 Enum.TryParse<TransferTab>(param, out var targetTab);
-                return tab == targetTab ? Visibility.Visible : Visibility.Collapsed;
+
+                return tab == targetTab
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             }
+
             return Visibility.Collapsed;
         }
 
@@ -104,7 +129,12 @@ namespace Seyfr
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is bool b)
-                return b ? Visibility.Collapsed : Visibility.Visible;
+            {
+                return b
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+
             return Visibility.Collapsed;
         }
 
@@ -122,6 +152,7 @@ namespace Seyfr
             if (value is bool b)
             {
                 var weightStr = b ? TrueValue : FalseValue;
+
                 return weightStr switch
                 {
                     "Light" => Microsoft.UI.Text.FontWeights.Light,
@@ -131,6 +162,7 @@ namespace Seyfr
                     _ => Microsoft.UI.Text.FontWeights.Normal,
                 };
             }
+
             return Microsoft.UI.Text.FontWeights.Normal;
         }
 
@@ -144,10 +176,12 @@ namespace Seyfr
         {
             if (value is bool isFolderMode && isFolderMode)
             {
-                return "\uE8B7"; // folder icon
+                // Folder icon
+                return "\uE8B7";
             }
 
-            return "\uE7C3"; // file/upload icon
+            // File icon
+            return "\uE7C3";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
