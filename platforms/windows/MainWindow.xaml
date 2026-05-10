@@ -57,6 +57,7 @@
             <local:BoolToFontWeightConverter x:Key="BoolToFontWeightConverter" TrueValue="SemiBold" FalseValue="Normal" />
             <local:BoolToFontWeightConverter x:Key="InverseBoolToFontWeightConverter" TrueValue="Normal" FalseValue="SemiBold" />
             <local:FolderModeGlyphConverter x:Key="FolderModeGlyphConverter" />
+            <local:IconBubbleBackgroundConverter x:Key="IconBubbleBackgroundConverter" />
             <local:TabFontWeightConverter x:Key="TabFontWeightConverter" />
             <local:TabStatusTextConverter x:Key="TabStatusTextConverter" />
             <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
@@ -129,11 +130,18 @@
 
                     <StackPanel Orientation="Horizontal" Spacing="10">
 
-                        <FontIcon Glyph="&#xE898;"
-                      FontSize="16"
-                      Foreground="{Binding SelectedTab, Converter={StaticResource TabForegroundConverter}, ConverterParameter=Send}"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center" />
+                        <Border Width="28"
+                                Height="28"
+                                CornerRadius="14"
+                                Background="{Binding SelectedTab, Converter={StaticResource IconBubbleBackgroundConverter}, ConverterParameter=Send}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE898;"
+                                      FontSize="12"
+                                      Foreground="White"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        </Border>
 
                         <TextBlock Text="Send"
                    FontSize="14"
@@ -155,11 +163,18 @@
 
                     <StackPanel Orientation="Horizontal" Spacing="10">
 
-                        <FontIcon Glyph="&#xE896;"
-                                FontSize="16"
-                                Foreground="{Binding SelectedTab, Converter={StaticResource TabForegroundConverter}, ConverterParameter=Receive}"
+                        <Border Width="28"
+                                Height="28"
+                                CornerRadius="14"
+                                Background="{Binding SelectedTab, Converter={StaticResource IconBubbleBackgroundConverter}, ConverterParameter=Receive}"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
+                                VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE896;"
+                                      FontSize="12"
+                                      Foreground="White"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        </Border>
 
                         <TextBlock Text="Receive"
                             FontSize="14"

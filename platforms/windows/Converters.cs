@@ -71,6 +71,38 @@ namespace Seyfr
         }
     }
 
+    public class IconBubbleBackgroundConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is TransferTab tab && parameter is string param)
+            {
+                Enum.TryParse<TransferTab>(param, out var targetTab);
+                if (tab == targetTab)
+                {
+                    var accent = GetAccentColor();
+                    return new SolidColorBrush(accent);
+                }
+            }
+            return new SolidColorBrush(Microsoft.UI.ColorHelper.FromArgb(255, 150, 150, 150));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+            => throw new NotImplementedException();
+
+        private static Windows.UI.Color GetAccentColor()
+        {
+            try
+            {
+                return (Windows.UI.Color)Application.Current.Resources["SystemAccentColor"];
+            }
+            catch
+            {
+                return Microsoft.UI.ColorHelper.FromArgb(255, 0, 120, 212);
+            }
+        }
+    }
+
     public class TabTitleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
