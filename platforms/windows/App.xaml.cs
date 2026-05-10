@@ -44,10 +44,7 @@ namespace Seyfr
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             _window = new MainWindow();
-            CurrentWindow = _window;
             _window.Activate();
         }
-
-        public static Window? CurrentWindow { get; private set; }
     }
 }
