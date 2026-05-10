@@ -448,15 +448,16 @@
                           VerticalAlignment="Center" />
                             </Border>
 
-                            <TextBlock Text="{Binding Ticket, Mode=OneWay}"
+                            <Border BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="6">
+                                <TextBlock Text="{Binding Ticket, Mode=OneWay}"
                        FontSize="11"
                        FontFamily="Consolas"
                        TextWrapping="Wrap"
-                       IsTextSelectionEnabled="True"
-                       Padding="6"
-                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                       BorderThickness="1"
-                       CornerRadius="12" />
+                       IsTextSelectionEnabled="True" />
+                            </Border>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
                                 <local:HandCursorButton HorizontalAlignment="Stretch"
