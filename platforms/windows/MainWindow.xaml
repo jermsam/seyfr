@@ -20,6 +20,7 @@
             <SolidColorBrush x:Key="HoverBrush" Color="#F5F5F5" />
             
             <Style x:Key="NavButtonStyle" TargetType="Button">
+                <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -313,7 +314,8 @@
                              Click="BrowseButton_Click"
                              Background="Transparent"
                              BorderThickness="0"
-                             Padding="0" />
+                             Padding="0"
+                             Cursor="Hand" />
                         </StackPanel>
 
                         <!-- Toggle -->
@@ -370,7 +372,8 @@
                         Padding="14,8"
                         CornerRadius="10"
                         Background="Transparent"
-                        BorderThickness="0.5" />
+                        BorderThickness="0.5"
+                        Cursor="Hand" />
                             </Grid>
 
                             <TextBox PlaceholderText="Paste ticket here..."
@@ -405,7 +408,8 @@
                                 <Button Content="Change"
                         HorizontalAlignment="Right"
                         Background="Transparent"
-                        BorderThickness="0" />
+                        BorderThickness="0"
+                        Cursor="Hand" />
                             </Grid>
 
                             <Border BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -441,7 +445,8 @@
             FontWeight="SemiBold"
             BorderBrush="{ThemeResource TextFillColorPrimaryBrush}"
             BorderThickness="1"
-            Background="Transparent" />
+            Background="Transparent"
+            Cursor="Hand" />
 
                     <TextBlock Text="Once you enter a valid ticket, the files will be ready to download."
                FontSize="13"
