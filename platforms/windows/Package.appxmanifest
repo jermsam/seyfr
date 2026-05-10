@@ -8,11 +8,11 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="8c6d9490-5d52-f70a-dc6a-2dca6727658f"
+    Name="f1774106-e971-8415-bf64-7689a199d7ff"
     Publisher="CN=dev"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="8c6d9490-5d52-f70a-dc6a-2dca6727658f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="f1774106-e971-8415-bf64-7689a199d7ff" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>seyfr</DisplayName>
