@@ -231,8 +231,8 @@ namespace Seyfr
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is bool b)
-                return b ? 1.0 : 0.6;
-            return 0.6;
+                return b ? 1.0 : 0.5;
+            return 0.5;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -244,7 +244,7 @@ namespace Seyfr
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is bool b)
-                return b ? 0.6 : 1.0;
+                return b ? 0.5 : 1.0;
             return 1.0;
         }
 

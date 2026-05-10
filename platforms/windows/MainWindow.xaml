@@ -291,10 +291,14 @@
                        Opacity="0.6"
                        HorizontalAlignment="Center" />
 
-                            <HyperlinkButton Content="or click to browse"
+                            <Button Content="or click to browse"
                              FontSize="14"
+                             FontWeight="Medium"
                              HorizontalAlignment="Center"
-                             Click="BrowseButton_Click" />
+                             Click="BrowseButton_Click"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="0" />
                         </StackPanel>
 
                         <!-- Toggle -->
@@ -310,7 +314,9 @@
 
                             <ToggleSwitch IsOn="{Binding IsFolderMode, Mode=TwoWay}"
                                 OnContent=""
-                                OffContent="" />
+                                OffContent=""
+                                MinWidth="0"
+                                Width="40" />
 
                             <TextBlock Text="Folder mode"
                                 FontSize="13"
