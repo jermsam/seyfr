@@ -20,7 +20,6 @@
             <SolidColorBrush x:Key="HoverBrush" Color="#F5F5F5" />
             
             <Style x:Key="NavButtonStyle" TargetType="Button">
-                <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -120,7 +119,7 @@
             <!-- Navigation -->
             <StackPanel Grid.Row="1" Margin="12,0" Spacing="4">
                 <!-- Send Button -->
-                <Button x:Name="SendNavButton"
+                <local:HandCursorButton x:Name="SendNavButton"
         HorizontalAlignment="Stretch"
         HorizontalContentAlignment="Left"
         Padding="12,8"
@@ -150,10 +149,10 @@
                    VerticalAlignment="Center"
                    Foreground="{Binding SelectedTab, Converter={StaticResource TabForegroundConverter}, ConverterParameter=Send}" />
                     </StackPanel>
-                </Button>
+                </local:HandCursorButton>
 
                 <!-- Receive Button -->
-                <Button x:Name="ReceiveNavButton"
+                <local:HandCursorButton x:Name="ReceiveNavButton"
                      HorizontalAlignment="Stretch"
                      HorizontalContentAlignment="Left"
                      Padding="12,8"
@@ -183,7 +182,7 @@
                             VerticalAlignment="Center"
                             Foreground="{Binding SelectedTab, Converter={StaticResource TabForegroundConverter}, ConverterParameter=Receive}" />
                     </StackPanel>
-                </Button>
+                </local:HandCursorButton>
             </StackPanel>
 
             <!-- Status -->
@@ -307,15 +306,14 @@
                        Opacity="0.6"
                        HorizontalAlignment="Center" />
 
-                            <Button Content="or click to browse"
+                            <local:HandCursorButton Content="or click to browse"
                              FontSize="14"
                              FontWeight="Medium"
                              HorizontalAlignment="Center"
                              Click="BrowseButton_Click"
                              Background="Transparent"
                              BorderThickness="0"
-                             Padding="0"
-                             Cursor="Hand" />
+                             Padding="0" />
                         </StackPanel>
 
                         <!-- Toggle -->
@@ -367,13 +365,12 @@
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" />
 
-                                <Button Content="Paste"
+                                <local:HandCursorButton Content="Paste"
                         HorizontalAlignment="Right"
                         Padding="14,8"
                         CornerRadius="10"
                         Background="Transparent"
-                        BorderThickness="0.5"
-                        Cursor="Hand" />
+                        BorderThickness="0.5" />
                             </Grid>
 
                             <TextBox PlaceholderText="Paste ticket here..."
@@ -405,11 +402,10 @@
                                FontWeight="SemiBold" />
                                 </StackPanel>
 
-                                <Button Content="Change"
+                                <local:HandCursorButton Content="Change"
                         HorizontalAlignment="Right"
                         Background="Transparent"
-                        BorderThickness="0"
-                        Cursor="Hand" />
+                        BorderThickness="0" />
                             </Grid>
 
                             <Border BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -436,7 +432,7 @@
                     </Border>
 
                     <!-- Receive Button -->
-                    <Button Content="Receive File"
+                    <local:HandCursorButton Content="Receive File"
             HorizontalAlignment="Stretch"
             Padding="0,12"
             CornerRadius="12"
@@ -445,8 +441,7 @@
             FontWeight="SemiBold"
             BorderBrush="{ThemeResource TextFillColorPrimaryBrush}"
             BorderThickness="1"
-            Background="Transparent"
-            Cursor="Hand" />
+            Background="Transparent" />
 
                     <TextBlock Text="Once you enter a valid ticket, the files will be ready to download."
                FontSize="13"
