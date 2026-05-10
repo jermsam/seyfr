@@ -60,6 +60,8 @@
             <local:IconBubbleBackgroundConverter x:Key="IconBubbleBackgroundConverter" />
             <local:TabFontWeightConverter x:Key="TabFontWeightConverter" />
             <local:TabStatusTextConverter x:Key="TabStatusTextConverter" />
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <local:BoolToStatusTextConverter x:Key="BoolToStatusTextConverter" />
             <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
             <local:InverseBoolToOpacityConverter x:Key="InverseBoolToOpacityConverter" />
         </Grid.Resources>
@@ -341,6 +343,96 @@
                         </StackPanel>
 
                     </StackPanel>
+
+                    <!-- File Card -->
+                    <Border Visibility="{Binding HasSelectedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="16"
+                Padding="16,14"
+                HorizontalAlignment="Stretch">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Progress / Check -->
+                            <Grid Grid.Column="0" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ProgressRing IsActive="{Binding IsBusy, Mode=OneWay}"
+                                  Width="40"
+                                  Height="40"
+                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                                  Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                  Background="Transparent" />
+                                <FontIcon Glyph="&#xE73E;"
+                          FontSize="14"
+                          FontWeight="SemiBold"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Visibility="{Binding IsBusy, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}" />
+                            </Grid>
+
+                            <!-- File Info -->
+                            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Spacing="4">
+                                <TextBlock Text="{Binding SelectedFileName, Mode=OneWay}"
+                           FontSize="15"
+                           FontWeight="Medium"
+                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding IsBusy, Converter={StaticResource BoolToStatusTextConverter}, Mode=OneWay}"
+                           FontSize="13"
+                           Opacity="0.6" />
+                            </StackPanel>
+
+                            <!-- Clear Button -->
+                            <local:HandCursorButton Grid.Column="2"
+                                    Content="&#xE711;"
+                                    FontFamily="Segoe UI Symbol"
+                                    FontSize="14"
+                                    Padding="6"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Command="{Binding ClearSendCommand, Mode=OneWay}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Ticket Display -->
+                    <Border Visibility="{Binding HasSelectedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="18"
+                Padding="24">
+
+                        <StackPanel Spacing="16">
+
+                            <Grid>
+                                <TextBlock Text="Ticket"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+
+                                <local:HandCursorButton Content="Copy"
+                        HorizontalAlignment="Right"
+                        Padding="14,8"
+                        CornerRadius="10"
+                        Background="Transparent"
+                        BorderThickness="0.5"
+                        Command="{Binding CopyTicketCommand, Mode=OneWay}" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding Ticket, Mode=OneWay}"
+                       FontSize="13"
+                       FontFamily="Consolas"
+                       TextWrapping="Wrap"
+                       TextSelectionEnabled="True" />
+                        </StackPanel>
+                    </Border>
+
                 </StackPanel>
 
                 <!-- Receive View -->
