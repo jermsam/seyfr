@@ -41,7 +41,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260416003" />
   </ItemGroup>
 
-  <!-- UniFFI-generated C# bindings are auto-included by the .NET SDK -->
+  <!-- UniFFI-generated C# bindings are auto-included by the .NET SDK from the Generated/ directory -->
 
   <!-- Native Rust library generated for UniFFI/C# runtime use -->
   <ItemGroup>
