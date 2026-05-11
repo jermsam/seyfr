@@ -91,6 +91,14 @@ namespace Seyfr
                 if (_ticket != value)
                 {
                     _ticket = value;
+                    try
+                    {
+                        _ticketQrImage = string.IsNullOrEmpty(_ticket) ? null : QrCodeHelper.Generate(_ticket, 8);
+                    }
+                    catch
+                    {
+                        _ticketQrImage = null;
+                    }
                     OnPropertyChanged(nameof(Ticket));
                     OnPropertyChanged(nameof(HasTicket));
                     OnPropertyChanged(nameof(TicketQrImage));
@@ -100,22 +108,8 @@ namespace Seyfr
 
         public bool HasTicket => !string.IsNullOrEmpty(_ticket);
 
-        public WriteableBitmap? TicketQrImage
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_ticket))
-                    return null;
-                try
-                {
-                    return QrCodeHelper.Generate(_ticket, 8);
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-        }
+        public WriteableBitmap? TicketQrImage => _ticketQrImage;
+        private WriteableBitmap? _ticketQrImage;
 
         public string TicketInput
         {

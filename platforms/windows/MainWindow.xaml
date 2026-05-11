@@ -103,7 +103,7 @@
 
                     <TextBlock Text="SEYFR"
                    FontSize="22"
-                   FontWeight="Light"
+                   FontWeight="ExtraLight"
                    CharacterSpacing="136"
                    TextAlignment="Left"
                    HorizontalAlignment="Left" />
