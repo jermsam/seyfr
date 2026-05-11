@@ -309,7 +309,7 @@
                             <Border x:Name="DragOverlay"
                                     CornerRadius="20"
                                     BorderThickness="2"
-                                    BorderBrush="{ThemeResource SystemAccentColorBrush}"
+                                    BorderBrush="{ThemeResource SystemControlHighlightAccentBrush}"
                                     Opacity="0"
                                     IsHitTestVisible="False" />
                         </Grid>
