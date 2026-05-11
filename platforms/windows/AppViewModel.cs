@@ -292,7 +292,13 @@ namespace Seyfr
             catch (Exception ex)
             {
                 IsError = true;
-                Status = string.IsNullOrEmpty(ex.Message) ? "Error" : $"Error: {ex.Message}";
+                // Build a useful message: walk the inner exception chain
+                var msg = ex.Message;
+                if (string.IsNullOrWhiteSpace(msg) && ex.InnerException != null)
+                    msg = ex.InnerException.Message;
+                if (string.IsNullOrWhiteSpace(msg))
+                    msg = ex.GetType().Name;
+                Status = $"Error: {msg}";
             }
             finally
             {
@@ -362,7 +368,12 @@ namespace Seyfr
             catch (Exception ex)
             {
                 IsError = true;
-                Status = string.IsNullOrEmpty(ex.Message) ? "Error" : $"Error: {ex.Message}";
+                var msg = ex.Message;
+                if (string.IsNullOrWhiteSpace(msg) && ex.InnerException != null)
+                    msg = ex.InnerException.Message;
+                if (string.IsNullOrWhiteSpace(msg))
+                    msg = ex.GetType().Name;
+                Status = $"Error: {msg}";
             }
             finally
             {
