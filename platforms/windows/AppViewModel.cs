@@ -127,6 +127,7 @@ namespace Seyfr
                     _ticketInput = value;
                     OnPropertyChanged(nameof(TicketInput));
                     OnPropertyChanged(nameof(HasTicketInput));
+                    ((RelayCommand)ReceiveCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -185,7 +186,7 @@ namespace Seyfr
                 if (_destinationPath != value)
                 {
                     _destinationPath = value;
-                    DestinationName = Path.GetFileName(value);
+                    DestinationName = new System.IO.DirectoryInfo(value).Name;
                     OnPropertyChanged(nameof(DestinationPath));
                     OnPropertyChanged(nameof(HasDestinationPath));
                 }

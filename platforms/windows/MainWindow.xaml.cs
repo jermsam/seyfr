@@ -31,6 +31,16 @@ namespace Seyfr
             ViewModel.SelectSendFileCommand.Execute(null);
         }
 
+        private void DropArea_DragEnter(object sender, DragEventArgs e)
+        {
+            DragOverlay.Opacity = 1;
+        }
+
+        private void DropArea_DragLeave(object sender, DragEventArgs e)
+        {
+            DragOverlay.Opacity = 0;
+        }
+
         private void DropArea_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
@@ -40,6 +50,7 @@ namespace Seyfr
 
         private async void DropArea_Drop(object sender, DragEventArgs e)
         {
+            DragOverlay.Opacity = 0;
             if (e.DataView.Contains(StandardDataFormats.StorageItems))
             {
                 var items = await e.DataView.GetStorageItemsAsync();

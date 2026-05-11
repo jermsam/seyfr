@@ -213,16 +213,22 @@
                 <!-- Send View -->
                 <StackPanel Grid.Row="1"
             Spacing="24"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
+            MaxWidth="720"
             Visibility="{Binding SelectedTab, Converter={StaticResource TabVisibilityConverter}, ConverterParameter=Send, Mode=OneWay}">
 
                     <!-- Drop Area -->
                     <StackPanel Spacing="16"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Stretch"
                 Visibility="{Binding HasSelectedFile, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}">
 
                         <Grid MinHeight="280"
-              HorizontalAlignment="Stretch">
+              HorizontalAlignment="Stretch"
+              AllowDrop="True"
+              DragOver="DropArea_DragOver"
+              DragLeave="DropArea_DragLeave"
+              DragEnter="DropArea_DragEnter"
+              Drop="DropArea_Drop">
 
                             <!-- Rings -->
                             <Canvas Width="280"
@@ -299,6 +305,13 @@
                                     FontSize="28"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center" />
+                            <!-- Drag-over accent ring overlay -->
+                            <Border x:Name="DragOverlay"
+                                    CornerRadius="20"
+                                    BorderThickness="2"
+                                    BorderBrush="{ThemeResource SystemAccentColorBrush}"
+                                    Opacity="0"
+                                    IsHitTestVisible="False" />
                         </Grid>
 
                         <StackPanel Spacing="4"
@@ -535,7 +548,8 @@
                 <!-- Receive View -->
                 <StackPanel Grid.Row="1"
             Spacing="24"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
+            MaxWidth="720"
             Visibility="{Binding SelectedTab, Converter={StaticResource TabVisibilityConverter}, ConverterParameter=Receive, Mode=OneWay}">
 
                     <!-- Ticket Card -->
@@ -544,7 +558,8 @@
             BorderThickness="1"
             CornerRadius="18"
             Padding="24"
-            Width="720">
+            MaxWidth="720"
+            HorizontalAlignment="Stretch">
 
                         <StackPanel Spacing="18">
 
@@ -597,7 +612,8 @@
             BorderThickness="1"
             CornerRadius="18"
             Padding="24"
-            Width="720">
+            MaxWidth="720"
+            HorizontalAlignment="Stretch">
 
                         <StackPanel Spacing="18">
 
@@ -612,7 +628,8 @@
                                 <local:HandCursorButton Content="Change"
                         HorizontalAlignment="Right"
                         Background="Transparent"
-                        BorderThickness="0" />
+                        BorderThickness="0"
+                        Command="{Binding SelectDestinationCommand, Mode=OneWay}" />
                             </Grid>
 
                             <Border BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -643,6 +660,7 @@
             Padding="0,12"
             CornerRadius="12"
             Command="{Binding ReceiveCommand, Mode=OneWay}"
+            IsEnabled="{Binding HasTicketInput, Mode=OneWay}"
             BorderBrush="{ThemeResource TextFillColorPrimaryBrush}"
             BorderThickness="1"
             Background="Transparent">
