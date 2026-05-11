@@ -31,6 +31,11 @@ namespace Seyfr
             ViewModel.SelectSendFileCommand.Execute(null);
         }
 
+        private void DropArea_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.SelectSendFileCommand.Execute(null);
+        }
+
         private void DropArea_DragEnter(object sender, DragEventArgs e)
         {
             DragOverlay.Opacity = 1;

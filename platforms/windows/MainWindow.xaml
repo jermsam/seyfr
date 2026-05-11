@@ -229,7 +229,8 @@
                               DragOver="DropArea_DragOver"
                               DragLeave="DropArea_DragLeave"
                               DragEnter="DropArea_DragEnter"
-                              Drop="DropArea_Drop">
+                              Drop="DropArea_Drop"
+                              Tapped="DropArea_Tapped">
 
                             <!-- Rings -->
                             <Canvas Width="280"
