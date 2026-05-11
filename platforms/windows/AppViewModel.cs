@@ -424,9 +424,10 @@ namespace Seyfr
 
             try
             {
+                var ticket = TicketInput?.Trim() ?? "";
                 await Task.Run(() =>
                 {
-                    _core.Receive(TicketInput, DestinationPath, null);
+                    _core.Receive(ticket, DestinationPath, null);
                 });
                 Status = "Received successfully";
             }
