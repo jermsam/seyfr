@@ -81,6 +81,20 @@ namespace Seyfr
             }
         }
 
+        public string? SelectedFilePath
+        {
+            get => _selectedFilePath;
+            private set
+            {
+                if (_selectedFilePath != value)
+                {
+                    _selectedFilePath = value;
+                    OnPropertyChanged(nameof(SelectedFilePath));
+                    OnPropertyChanged(nameof(HasSelectedFile));
+                }
+            }
+        }
+
         public bool HasSelectedFile => !string.IsNullOrEmpty(_selectedFileName);
 
         public string Ticket
