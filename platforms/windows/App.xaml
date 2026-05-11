@@ -10,6 +10,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+            <!-- Accent color brush derived from the documented SystemAccentColor Color resource -->
+            <SolidColorBrush x:Key="AccentBorderBrush" Color="{ThemeResource SystemAccentColor}" />
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>
