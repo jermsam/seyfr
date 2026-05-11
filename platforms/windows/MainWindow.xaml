@@ -373,7 +373,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- Progress / Check -->
+                            <!-- Progress / Check / Error -->
                             <Grid Grid.Column="0" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <ProgressRing IsActive="{Binding IsBusy, Mode=OneWay}"
                                   Width="40"
@@ -381,20 +381,41 @@
                                   Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                                   Background="Transparent" />
-                                <Ellipse Width="40"
-                         Height="40"
-                         Stroke="{ThemeResource TextFillColorSecondaryBrush}"
-                         StrokeThickness="2"
-                         Opacity="0.25"
-                         Visibility="{Binding IsBusy, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center" />
-                                <FontIcon Glyph="&#xE73E;"
-                          FontSize="12"
-                          FontWeight="SemiBold"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          Visibility="{Binding IsBusy, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}" />
+                                
+                                <!-- Success Icon -->
+                                <Grid Visibility="{Binding IsBusy, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}">
+                                    <Grid Visibility="{Binding IsError, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}">
+                                        <Ellipse Width="40"
+                                                 Height="40"
+                                                 Stroke="{ThemeResource TextFillColorSecondaryBrush}"
+                                                 StrokeThickness="2"
+                                                 Opacity="0.25"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" />
+                                        <FontIcon Glyph="&#xE73E;"
+                                                  FontSize="12"
+                                                  FontWeight="SemiBold"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                    </Grid>
+                                    
+                                    <!-- Error Icon -->
+                                    <Grid Visibility="{Binding IsError, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                        <Ellipse Width="40"
+                                                 Height="40"
+                                                 Stroke="{ThemeResource SystemFillColorCriticalBrush}"
+                                                 StrokeThickness="2"
+                                                 Opacity="0.5"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" />
+                                        <FontIcon Glyph="&#xE783;"
+                                                  FontSize="12"
+                                                  FontWeight="SemiBold"
+                                                  Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                    </Grid>
+                                </Grid>
                             </Grid>
 
                             <!-- File Info -->
@@ -403,9 +424,9 @@
                            FontSize="15"
                            FontWeight="Medium"
                            TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="{Binding IsBusy, Converter={StaticResource BoolToStatusTextConverter}, Mode=OneWay}"
-                           FontSize="13"
-                           Opacity="0.6" />
+                                <TextBlock Text="{Binding FileStatusText, Mode=OneWay}"
+                                           FontSize="13"
+                                           Opacity="0.6" />
                             </StackPanel>
 
                         </Grid>

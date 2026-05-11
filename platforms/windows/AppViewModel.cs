@@ -159,6 +159,7 @@ namespace Seyfr
                 {
                     _isBusy = value;
                     OnPropertyChanged(nameof(IsBusy));
+                    OnPropertyChanged(nameof(FileStatusText));
                     ((RelayCommand)SendCommand).RaiseCanExecuteChanged();
                     ((RelayCommand)ReceiveCommand).RaiseCanExecuteChanged();
                 }
@@ -174,7 +175,18 @@ namespace Seyfr
                 {
                     _isError = value;
                     OnPropertyChanged(nameof(IsError));
+                    OnPropertyChanged(nameof(FileStatusText));
                 }
+            }
+        }
+
+        public string FileStatusText
+        {
+            get
+            {
+                if (IsBusy) return "In Progress";
+                if (IsError) return "Failed";
+                return "Completed";
             }
         }
 
@@ -299,7 +311,6 @@ namespace Seyfr
                     SeyfrException.FileNotFound e => $"File not found: {e.path}",
                     SeyfrException.Store e      => $"Store error: {e.details}",
                     SeyfrException.Internal e   => $"Internal error: {e.details}",
-                    SeyfrException.Cancelled    => "Transfer cancelled",
                     SeyfrException.Timeout      => "Transfer timed out",
                     _                           => ex.Message
                 };
