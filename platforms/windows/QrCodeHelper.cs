@@ -22,7 +22,7 @@ namespace Seyfr
         public static unsafe WriteableBitmap Generate(string text, int pixelsPerModule = 8)
         {
             var qrGenerator = new QRCodeGenerator();
-            var qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+            var qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.M);
             int moduleCount = qrCodeData.ModuleMatrix.Count;
             int size = moduleCount * pixelsPerModule;
 
@@ -34,10 +34,10 @@ namespace Seyfr
 
             for (int y = 0; y < size; y++)
             {
+                int moduleY = y / pixelsPerModule;
                 for (int x = 0; x < size; x++)
                 {
                     int moduleX = x / pixelsPerModule;
-                    int moduleY = y / pixelsPerModule;
                     bool isBlack = qrCodeData.ModuleMatrix[moduleY][moduleX];
 
                     int index = (y * size + x) * 4;
@@ -49,6 +49,7 @@ namespace Seyfr
                 }
             }
 
+            writeableBitmap.Invalidate();
             return writeableBitmap;
         }
     }

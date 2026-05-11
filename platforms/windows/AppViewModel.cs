@@ -93,11 +93,14 @@ namespace Seyfr
                     _ticket = value;
                     try
                     {
+                        // Use Medium ECC level for a good balance of durability and size
                         _ticketQrImage = string.IsNullOrEmpty(_ticket) ? null : QrCodeHelper.Generate(_ticket, 8);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         _ticketQrImage = null;
+                        IsError = true;
+                        Status = $"QR Error: {ex.Message}";
                     }
                     OnPropertyChanged(nameof(Ticket));
                     OnPropertyChanged(nameof(HasTicket));
