@@ -22,6 +22,10 @@ namespace Seyfr
             this.InitializeComponent();
             ViewModel = new AppViewModel();
             RootGrid.DataContext = ViewModel;
+
+            // Set Hand cursor for the drop zone
+            DropAreaGrid.ProtectedCursor = Microsoft.UI.Input.InputSystemCursor.Create(Microsoft.UI.Input.InputSystemCursorShape.Hand);
+
             // Wire up navigation button clicks
             SendNavButton.Click += (s, e) => ViewModel.SelectedTab = TransferTab.Send;
             ReceiveNavButton.Click += (s, e) => ViewModel.SelectedTab = TransferTab.Receive;

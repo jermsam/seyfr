@@ -222,7 +222,8 @@
                 HorizontalAlignment="Stretch"
                 Visibility="{Binding HasSelectedFile, Converter={StaticResource InverseBoolToVisibilityConverter}, Mode=OneWay}">
 
-                        <Grid MinHeight="280"
+                        <Grid x:Name="DropAreaGrid"
+                              MinHeight="280"
                               HorizontalAlignment="Stretch"
                               Background="Transparent"
                               AllowDrop="True"
