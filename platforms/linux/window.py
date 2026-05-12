@@ -193,11 +193,12 @@ class SeyfrWindow(Adw.ApplicationWindow):
         rings_box.set_halign(Gtk.Align.CENTER)
         rings_box.set_valign(Gtk.Align.CENTER)
         
-        # Add 6 concentric rings
+        # Add 6 concentric rings with better spacing
         for i in range(6):
             ring = Gtk.Box()
             ring.add_css_class("concentric-ring")
-            size = 260 - (i * 30)
+            # Increase size decrement for better spacing
+            size = 320 - (i * 45)
             ring.set_size_request(size, size)
             ring.set_halign(Gtk.Align.CENTER)
             ring.set_valign(Gtk.Align.CENTER)
