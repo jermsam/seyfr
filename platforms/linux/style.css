@@ -1,0 +1,101 @@
+/* SEYFR Linux Design System */
+
+.sidebar {
+    background-color: @window_bg_color;
+    border-right: 1px solid @border_color;
+}
+
+.sidebar-logo-circle {
+    border: 1.2px solid @fg_color;
+    border-radius: 50%;
+    min-width: 44px;
+    min-height: 44px;
+    margin-bottom: 12px;
+}
+
+.sidebar-logo-text {
+    font-size: 22pt;
+    font-weight: 100; /* Extra Light */
+    letter-spacing: 0.2em;
+    margin-bottom: 2px;
+}
+
+.sidebar-logo-subtitle {
+    font-size: 8pt;
+    font-family: monospace;
+    opacity: 0.6;
+    letter-spacing: 0.1em;
+}
+
+.nav-button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.nav-button:checked {
+    background-color: alpha(@accent_color, 0.1);
+    color: @accent_color;
+    font-weight: 600;
+}
+
+.status-dot {
+    min-width: 8px;
+    min-height: 8px;
+    border-radius: 50%;
+    background-color: @success_color;
+}
+
+.detail-header-title {
+    font-size: 24pt;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.detail-header-subtitle {
+    font-size: 10pt;
+    opacity: 0.6;
+}
+
+/* Concentric Rings */
+.drop-zone {
+    border-radius: 20px;
+    transition: all 200ms ease-in-out;
+}
+
+.drop-zone.targeted {
+    border: 2px solid @accent_color;
+}
+
+.concentric-ring {
+    border: 0.5px solid alpha(@fg_color, 0.1);
+    border-radius: 50%;
+}
+
+.card {
+    background-color: @card_bg_color;
+    border: 1px solid @card_border_color;
+    border-radius: 18px;
+    padding: 24px;
+}
+
+.status-pill {
+    background-color: @card_bg_color;
+    border: 1px solid @card_border_color;
+    border-radius: 12px;
+    padding: 10px 16px;
+}
+
+.ticket-text {
+    font-family: monospace;
+    font-size: 10pt;
+    background-color: alpha(@fg_color, 0.05);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.action-button {
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+}

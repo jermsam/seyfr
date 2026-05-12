@@ -8,6 +8,7 @@ enabled = [
     "android",
     "macos",
     "windows",
+    "linux",
 ]
 
 [platforms.ios]
