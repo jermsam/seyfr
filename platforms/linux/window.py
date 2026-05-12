@@ -224,7 +224,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         
         overlay.set_child(rings_box)
         self.drop_zone.set_child(overlay)
-        container.append(self.drop_zone)
+        self.drop_container.append(self.drop_zone)
         
         # Drag & Drop Label
         labels_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
@@ -235,7 +235,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         browse_label = Gtk.Label(label="or click to browse")
         browse_label.add_css_class("dim-label")
         labels_box.append(browse_label)
-        container.append(labels_box)
+        self.drop_container.append(labels_box)
         
         # Mode Toggle
         self.mode_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
