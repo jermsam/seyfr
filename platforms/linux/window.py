@@ -585,13 +585,27 @@ class SeyfrWindow(Adw.ApplicationWindow):
         thread.start()
 
     def do_receive(self, ticket):
+        print(f"DEBUG: Starting do_receive thread for ticket: {ticket[:10]}...")
         try:
-            # Call the core receive logic
+            # Check directory before
+            before = os.listdir(self.download_path)
+            
+            print(f"DEBUG: Calling core.receive with dest={self.download_path}")
             self.core.receive(ticket, self.download_path)
-            print(f"SUCCESS: Download complete at {self.download_path}")
-            GLib.idle_add(self.show_receive_success)
+            
+            # Check directory after
+            after = os.listdir(self.download_path)
+            new_files = [f for f in after if f not in before]
+            
+            if new_files:
+                print(f"SUCCESS: Received files: {new_files}")
+                GLib.idle_add(self.show_receive_success)
+            else:
+                print(f"WARNING: Core reported success but no new files found in {self.download_path}")
+                GLib.idle_add(self.show_receive_error, "Download finished but no files were saved.")
+                
         except Exception as e:
-            print(f"CRITICAL RECEIVE ERROR: {e}")
+            print(f"CRITICAL RECEIVE ERROR: {type(e).__name__}: {e}")
             GLib.idle_add(self.show_receive_error, str(e))
         finally:
             GLib.idle_add(self.receive_button.set_sensitive, True)
