@@ -27,6 +27,8 @@ min_version = "10.0.19041.0"
 
 [platforms.linux]
 gtk_version = "4.0"
+app_id = "io.seyfr.Seyfr"
+runtime_version = "46"
 
 [platforms.web]
 target = "es2020"
