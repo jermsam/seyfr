@@ -22,11 +22,20 @@
     margin-bottom: 8px;
 }
 
+/* Page Content */
+.page-title {
+    font-size: 36pt;
+    font-weight: 900;
+    margin-bottom: 16px;
+    color: #000000; /* Forced high contrast black */
+}
+
+/* Ensure branding is also dark and prominent */
 .brand-name {
     font-size: 18pt;
     font-weight: 800;
     letter-spacing: 0.05em;
-    color: @fg_color; /* Standard foreground color for contrast */
+    color: #000000;
 }
 
 /* Navigation List Styling */
@@ -103,19 +112,19 @@
 .status-label {
     font-size: 10pt;
     font-weight: 800;
-    color: @fg_color;
+    color: #242424; /* Darker for light mode */
 }
 
 .status-sublabel {
     font-size: 9pt;
-    color: alpha(@fg_color, 0.7); /* Higher contrast than before */
+    color: #444444; /* Darker for light mode */
 }
 
 /* Labels */
 .dim-label {
     font-size: 10pt;
     font-weight: 600;
-    color: alpha(@fg_color, 0.7); /* Improved contrast */
+    color: #555555; /* Higher contrast gray */
 }
 
 /* Action Buttons */
