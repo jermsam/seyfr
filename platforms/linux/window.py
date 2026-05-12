@@ -7,476 +7,296 @@ from PIL import Image
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw, Gdk, Gio, GLib
+from gi.repository import Gtk, Adw, Gdk, Gio, GLib, GdkPixbuf
 
 from core_wrapper import CoreWrapper
 
 class SeyfrWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        
-        self.core = CoreWrapper()
-        self.selected_tab = "send"
-        self.is_folder_mode = False
-        self.selected_file_path = None
-        self.current_ticket = None
-        
+        self.set_default_size(900, 600)
         self.set_title("Seyfr")
-        self.set_default_size(940, 640)
+
+        # Core initialization
+        self.core = CoreWrapper()
         
         # Load CSS
         self.load_css()
         
-        # Main Layout: Navigation Split View
-        self.split_view = Adw.NavigationSplitView()
+        # Main Layout using a horizontal box for sidebar + content
+        # This replaces Adw.NavigationSplitView for Libadwaita 1.2 compatibility
+        self.main_layout = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        self.set_content(self.main_layout)
+
+        # 1. Sidebar Setup
+        self.sidebar_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.sidebar_box.add_css_class("sidebar")
+        self.sidebar_box.set_size_request(240, -1)
         
-        # Sidebar
-        self.create_sidebar()
+        # Branding
+        brand_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        brand_box.set_margin_top(32)
+        brand_box.set_margin_bottom(32)
+        brand_box.set_margin_start(20)
+        brand_box.set_margin_end(20)
         
-        # Content
-        self.create_content()
+        logo_label = Gtk.Label(label="S")
+        logo_label.add_css_class("logo-icon")
+        brand_box.append(logo_label)
         
-        self.set_content(self.split_view)
+        brand_name = Gtk.Label(label="Seyfr")
+        brand_name.add_css_class("brand-name")
+        brand_box.append(brand_name)
         
-        # Initial State
-        self.update_view()
+        self.sidebar_box.append(brand_box)
+        
+        # Navigation List
+        self.nav_list = Gtk.ListBox()
+        self.nav_list.add_css_class("navigation-sidebar")
+        self.nav_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self.nav_list.connect("row-selected", self.on_nav_changed)
+        
+        self.send_row = self.create_nav_row("Send", "mail-send-symbolic")
+        self.receive_row = self.create_nav_row("Receive", "mail-receive-symbolic")
+        
+        self.nav_list.append(self.send_row)
+        self.nav_list.append(self.receive_row)
+        
+        self.sidebar_box.append(self.nav_list)
+        
+        # Spacer
+        spacer = Gtk.Box()
+        spacer.set_vexpand(True)
+        self.sidebar_box.append(spacer)
+        
+        # Node ID Badge
+        self.node_id_label = Gtk.Label(label=f"Node: {self.core.node_id[:8]}...")
+        self.node_id_label.add_css_class("node-id-badge")
+        self.sidebar_box.append(self.node_id_label)
+        
+        self.main_layout.append(self.sidebar_box)
+
+        # 2. Content Area Setup
+        self.content_stack = Gtk.Stack()
+        self.content_stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+        self.content_stack.set_hexpand(True)
+        
+        # Wrapper for content with a HeaderBar
+        self.content_wrapper = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.header = Adw.HeaderBar()
+        self.header.set_show_end_title_buttons(True)
+        self.content_wrapper.append(self.header)
+        self.content_wrapper.append(self.content_stack)
+        
+        self.main_layout.append(self.content_wrapper)
+        
+        # Initialize Pages
+        self.setup_send_page()
+        self.setup_receive_page()
+        
+        # Select first row
+        self.nav_list.select_row(self.send_row)
 
     def load_css(self):
         css_provider = Gtk.CssProvider()
         css_path = os.path.join(os.path.dirname(__file__), "style.css")
-        css_provider.load_from_path(css_path)
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        if os.path.exists(css_path):
+            css_provider.load_from_path(css_path)
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                css_provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            )
 
-    def create_sidebar(self):
-        sidebar_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-        sidebar_box.add_css_class("sidebar")
-        sidebar_box.set_size_request(220, -1)
-
-        # Logo Section
-        logo_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        logo_container.set_margin_start(16)
-        logo_container.set_margin_end(16)
-        logo_container.set_margin_top(20)
-        logo_container.set_margin_bottom(32)
-
-        logo_circle = Gtk.Box()
-        logo_circle.add_css_class("sidebar-logo-circle")
-        logo_label = Gtk.Label(label="S")
-        logo_label.set_halign(Gtk.Align.CENTER)
-        logo_label.set_valign(Gtk.Align.CENTER)
-        logo_label.set_hexpand(True)
-        logo_label.set_vexpand(True)
-        logo_circle.append(logo_label)
-        logo_container.append(logo_circle)
-
-        text_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        brand_label = Gtk.Label(label="SEYFR")
-        brand_label.add_css_class("sidebar-logo-text")
-        brand_label.set_halign(Gtk.Align.START)
-        text_container.append(brand_label)
-
-        subtitle_label = Gtk.Label(label="Send Your Files Right")
-        subtitle_label.add_css_class("sidebar-logo-subtitle")
-        subtitle_label.set_halign(Gtk.Align.START)
-        text_container.append(subtitle_label)
+    def create_nav_row(self, title, icon_name):
+        row = Gtk.ListBoxRow()
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        box.set_margin_start(16)
+        box.set_margin_end(16)
+        box.set_margin_top(10)
+        box.set_margin_bottom(10)
         
-        logo_container.append(text_container)
-        sidebar_box.append(logo_container)
-
-        # Navigation Section
-        nav_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        nav_box.set_margin_start(12)
-        nav_box.set_margin_end(12)
-
-        self.send_btn = Gtk.ToggleButton(label="Send")
-        self.send_btn.add_css_class("nav-button")
-        self.send_btn.set_active(True)
-        self.send_btn.connect("clicked", self.on_tab_changed, "send")
-        nav_box.append(self.send_btn)
-
-        self.receive_btn = Gtk.ToggleButton(label="Receive")
-        self.receive_btn.add_css_class("nav-button")
-        self.receive_btn.set_group(self.send_btn)
-        self.receive_btn.connect("clicked", self.on_tab_changed, "receive")
-        nav_box.append(self.receive_btn)
-
-        sidebar_box.append(nav_box)
-
-        # Spacer
-        spacer = Gtk.Box()
-        spacer.set_vexpand(True)
-        sidebar_box.append(spacer)
-
-        # Status Section
-        status_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        status_container.set_margin_start(16)
-        status_container.set_margin_bottom(20)
-
-        online_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        dot = Gtk.Box()
-        dot.add_css_class("status-dot")
-        online_box.append(dot)
-        online_label = Gtk.Label(label="Online")
-        online_label.add_css_class("caption")
-        online_label.set_font_options(Gdk.FontOptions()) # For bold
-        online_box.append(online_label)
-        status_container.append(online_box)
-
-        self.status_desc = Gtk.Label(label="Ready to send files")
-        self.status_desc.add_css_class("caption")
-        self.status_desc.set_halign(Gtk.Align.START)
-        self.status_desc.set_opacity(0.6)
-        status_container.append(self.status_desc)
-
-        sidebar_box.append(status_container)
-
-        sidebar_page = Adw.NavigationPage.new(sidebar_box, "Sidebar")
-        self.split_view.set_sidebar(sidebar_page)
-
-    def create_content(self):
-        self.stack = Gtk.Stack()
-        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
-
-        # Send Page
-        self.create_send_page()
+        icon = Gtk.Image.new_from_icon_name(icon_name)
+        box.append(icon)
         
-        # Receive Page
-        self.create_receive_page()
+        label = Gtk.Label(label=title)
+        box.append(label)
+        
+        row.set_child(box)
+        row.title = title
+        return row
 
-        content_page = Adw.NavigationPage.new(self.stack, "Content")
-        self.split_view.set_content(content_page)
+    def on_nav_changed(self, listbox, row):
+        if not row: return
+        self.content_stack.set_visible_child_name(row.title)
+        self.header.set_title(row.title)
 
-    def create_send_page(self):
-        send_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=32)
-        send_box.set_margin_top(40)
-        send_box.set_margin_bottom(40)
-        send_box.set_margin_start(40)
-        send_box.set_margin_end(40)
-        send_box.set_halign(Gtk.Align.CENTER)
-        send_box.set_size_request(600, -1)
-
-        # Header
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        title = Gtk.Label(label="Send")
-        title.add_css_class("detail-header-title")
-        header_box.append(title)
-        subtitle = Gtk.Label(label="Send your files to any device")
-        subtitle.add_css_class("detail-header-subtitle")
-        header_box.append(subtitle)
-        send_box.append(header_box)
-
-        # Drop Area Container
-        self.drop_stack = Gtk.Stack()
+    def setup_send_page(self):
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
+        page.set_margin_top(40)
+        page.set_margin_start(40)
+        page.set_margin_end(40)
+        page.set_margin_bottom(40)
         
-        # Idle State (Drop Zone)
-        self.idle_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        # 1. Drop Zone
+        self.drop_zone = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        self.drop_zone.add_css_class("drop-zone")
+        self.drop_zone.set_vexpand(True)
+        self.drop_zone.set_valign(Gtk.Align.CENTER)
         
-        rings_overlay = Gtk.Overlay()
-        rings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        rings_box.set_size_request(280, 280)
-        rings_box.set_halign(Gtk.Align.CENTER)
+        drop_icon = Gtk.Image.new_from_icon_name("document-send-symbolic")
+        drop_icon.set_pixel_size(64)
+        self.drop_zone.append(drop_icon)
         
-        # Add rings (mocked with layered circles for now)
-        for i in range(8):
-            ring = Gtk.Box()
-            ring.add_css_class("concentric-ring")
-            size = 80 + i * 22
-            ring.set_size_request(size, size)
-            # This is complex in GTK without custom drawing, but we'll use a DrawingArea later if needed
+        self.drop_label = Gtk.Label(label="Drag files here to send")
+        self.drop_label.add_css_class("drop-title")
+        self.drop_zone.append(self.drop_label)
         
-        # Simplified icon for now
-        self.file_icon = Gtk.Image.new_from_icon_name("document-send-symbolic")
-        self.file_icon.set_pixel_size(48)
-        rings_overlay.set_child(self.file_icon)
+        subtitle = Gtk.Label(label="Files will be shared securely via Seyfr core")
+        subtitle.add_css_class("drop-subtitle")
+        self.drop_zone.append(subtitle)
         
-        self.idle_box.append(rings_overlay)
+        # Drag and Drop support
+        target = Gtk.DropTarget.new(Gio.ListStore.new(Gdk.FileList), Gdk.DragAction.COPY)
+        target.connect("drop", self.on_file_drop)
+        self.drop_zone.add_controller(target)
         
-        text_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        drag_label = Gtk.Label(label="Drag & drop files here")
-        drag_label.set_opacity(0.6)
-        text_vbox.append(drag_label)
+        page.append(self.drop_zone)
         
-        browse_btn = Gtk.Button(label="or click to browse")
-        browse_btn.add_css_class("flat")
-        browse_btn.connect("clicked", self.on_browse_clicked)
-        text_vbox.append(browse_btn)
-        self.idle_box.append(text_vbox)
+        # 2. Controls
+        controls = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        controls.set_halign(Gtk.Align.CENTER)
         
-        # Mode Toggle
-        mode_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        mode_box.set_halign(Gtk.Align.CENTER)
-        self.mode_label = Gtk.Label(label="File mode")
-        mode_box.append(self.mode_label)
-        self.mode_switch = Gtk.Switch()
-        self.mode_switch.connect("notify::active", self.on_mode_toggled)
-        mode_box.append(self.mode_switch)
-        self.idle_box.append(mode_box)
+        self.file_toggle = Gtk.ToggleButton(label="File")
+        self.file_toggle.set_active(True)
+        self.folder_toggle = Gtk.ToggleButton(label="Folder")
+        self.folder_toggle.set_group(self.file_toggle)
         
-        self.drop_stack.add_named(self.idle_box, "idle")
+        controls.append(self.file_toggle)
+        controls.append(self.folder_toggle)
         
-        # Active State (Ticket Card)
-        self.ticket_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
+        page.append(controls)
         
-        # File Info Card
-        file_card = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
-        file_card.add_css_class("card")
-        file_icon_large = Gtk.Image.new_from_icon_name("document-open-symbolic")
-        file_icon_large.set_pixel_size(32)
-        file_card.append(file_icon_large)
-        file_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        self.filename_label = Gtk.Label(label="filename.zip")
-        self.filename_label.set_halign(Gtk.Align.START)
-        file_info.append(self.filename_label)
-        self.file_status_label = Gtk.Label(label="Ready to share")
-        self.file_status_label.set_halign(Gtk.Align.START)
-        self.file_status_label.set_opacity(0.6)
-        file_info.append(self.file_status_label)
-        file_card.append(file_info)
-        self.ticket_box.append(file_card)
+        # 3. QR Code Area (Hidden initially)
+        self.qr_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        self.qr_box.set_visible(False)
         
-        # Ticket Card
-        ticket_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
-        ticket_card.add_css_class("card")
-        
-        ticket_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        ticket_title = Gtk.Label(label="Transfer Ticket")
-        ticket_title.add_css_class("title-4")
-        ticket_header.append(ticket_title)
-        ticket_card.append(ticket_header)
-        
-        # QR Code Placeholder
         self.qr_image = Gtk.Image()
-        self.qr_image.set_size_request(200, 200)
-        ticket_card.append(self.qr_image)
+        self.qr_image.set_pixel_size(256)
+        self.qr_box.append(self.qr_image)
         
-        self.ticket_label = Gtk.Label()
-        self.ticket_label.add_css_class("ticket-text")
-        self.ticket_label.set_wrap(True)
-        self.ticket_label.set_max_width_chars(60)
-        ticket_card.append(self.ticket_label)
+        self.ticket_label = Gtk.Label(label="Ticket ID: ...")
+        self.ticket_label.add_css_class("ticket-id")
+        self.qr_box.append(self.ticket_label)
         
-        btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        copy_btn = Gtk.Button(label="Copy")
-        copy_btn.add_css_class("action-button")
-        copy_btn.set_hexpand(True)
-        copy_btn.connect("clicked", self.on_copy_ticket)
-        btn_box.append(copy_btn)
-        share_btn = Gtk.Button(label="Share")
-        share_btn.add_css_class("action-button")
-        share_btn.set_hexpand(True)
-        btn_box.append(share_btn)
-        ticket_card.append(btn_box)
+        page.append(self.qr_box)
         
-        self.ticket_box.append(ticket_card)
+        self.content_stack.add_named(page, "Send")
+
+    def setup_receive_page(self):
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=32)
+        page.set_valign(Gtk.Align.CENTER)
+        page.set_margin_start(80)
+        page.set_margin_end(80)
         
-        self.drop_stack.add_named(self.ticket_box, "ticket")
-        send_box.append(self.drop_stack)
-
-        self.stack.add_named(send_box, "send")
-
-    def create_receive_page(self):
-        receive_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=32)
-        receive_box.set_margin_top(40)
-        receive_box.set_margin_start(40)
-        receive_box.set_margin_end(40)
-        receive_box.set_halign(Gtk.Align.CENTER)
-        receive_box.set_size_request(600, -1)
-
-        # Header
-        header_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        title = Gtk.Label(label="Receive")
-        title.add_css_class("detail-header-title")
-        header_box.append(title)
-        subtitle = Gtk.Label(label="Receive files from any device")
-        subtitle.add_css_class("detail-header-subtitle")
-        header_box.append(subtitle)
-        receive_box.append(header_box)
-
-        # Ticket Input Card
-        input_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
-        input_card.add_css_class("card")
+        title = Gtk.Label(label="Receive Files")
+        title.add_css_class("page-title")
+        page.append(title)
         
-        input_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        input_title = Gtk.Label(label="Enter ticket")
-        input_title.add_css_class("title-4")
-        input_header.append(input_title)
+        # Input Section
+        input_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         
-        btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        btn_box.set_halign(Gtk.Align.END)
-        paste_btn = Gtk.Button(label="Paste")
-        paste_btn.add_css_class("flat")
-        paste_btn.connect("clicked", self.on_paste_ticket)
-        btn_box.append(paste_btn)
-        clear_btn = Gtk.Button(label="Clear")
-        clear_btn.add_css_class("flat")
-        clear_btn.connect("clicked", self.on_clear_ticket)
-        btn_box.append(clear_btn)
-        input_header.append(btn_box)
-        input_card.append(input_header)
+        label = Gtk.Label(label="Enter Transfer Ticket")
+        label.set_halign(Gtk.Align.START)
+        input_box.append(label)
         
-        self.ticket_entry = Gtk.TextView()
-        self.ticket_entry.set_size_request(-1, 80)
-        self.ticket_entry.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        input_card.append(self.ticket_entry)
-        receive_box.append(input_card)
-
-        # Save Location Card
-        save_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
-        save_card.add_css_class("card")
-        save_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        save_title = Gtk.Label(label="Save Location")
-        save_header.append(save_title)
-        change_btn = Gtk.Button(label="Change")
-        change_btn.set_halign(Gtk.Align.END)
-        change_btn.set_hexpand(True)
-        save_header.append(change_btn)
-        save_card.append(save_header)
+        self.ticket_entry = Gtk.Entry()
+        self.ticket_entry.set_placeholder_text("Paste ticket here...")
+        self.ticket_entry.add_css_class("ticket-entry")
+        input_box.append(self.ticket_entry)
         
-        path_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        path_box.append(Gtk.Image.new_from_icon_name("folder-symbolic"))
-        path_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        path_name = Gtk.Label(label="Downloads")
-        path_name.set_halign(Gtk.Align.START)
-        path_info.append(path_name)
-        self.path_label = Gtk.Label(label=os.path.expanduser("~/Downloads"))
-        self.path_label.set_halign(Gtk.Align.START)
-        self.path_label.set_opacity(0.6)
-        path_info.append(self.path_label)
-        path_box.append(path_info)
-        save_card.append(path_box)
-        receive_box.append(save_card)
+        page.append(input_box)
+        
+        # Receive Button
+        self.receive_btn = Gtk.Button(label="Receive")
+        self.receive_btn.add_css_class("suggested-action")
+        self.receive_btn.add_css_class("pill")
+        self.receive_btn.set_size_request(200, 50)
+        self.receive_btn.set_halign(Gtk.Align.CENTER)
+        self.receive_btn.connect("clicked", self.on_receive_clicked)
+        page.append(self.receive_btn)
+        
+        self.content_stack.add_named(page, "Receive")
 
-        # Action Button
-        self.receive_action_btn = Gtk.Button(label="Receive File")
-        self.receive_action_btn.add_css_class("suggested-action")
-        self.receive_action_btn.add_css_class("action-button")
-        self.receive_action_btn.connect("clicked", self.on_receive_clicked)
-        receive_box.append(self.receive_action_btn)
+    def on_file_drop(self, target, value, x, y):
+        if isinstance(value, Gdk.FileList):
+            files = value.get_files()
+            if files:
+                path = files[0].get_path()
+                self.start_send(path)
+                return True
+        return False
 
-        self.stack.add_named(receive_box, "receive")
+    def start_send(self, path):
+        self.drop_zone.set_visible(False)
+        self.qr_box.set_visible(True)
+        
+        # Run in background thread
+        thread = threading.Thread(target=self._send_thread, args=(path,))
+        thread.daemon = True
+        thread.start()
 
-    def on_tab_changed(self, button, tab_name):
-        if button.get_active():
-            self.selected_tab = tab_name
-            self.update_view()
-
-    def update_view(self):
-        self.stack.set_visible_child_name(self.selected_tab)
-        if self.selected_tab == "send":
-            self.status_desc.set_text("Ready to send files")
-        else:
-            self.status_desc.set_text("Ready to receive files")
-
-    def on_mode_toggled(self, switch, gparam):
-        self.is_folder_mode = switch.get_active()
-        icon = "folder-symbolic" if self.is_folder_mode else "document-send-symbolic"
-        self.file_icon.set_from_icon_name(icon)
-
-    def on_browse_clicked(self, button):
-        dialog = Gtk.FileDialog()
-        if self.is_folder_mode:
-            dialog.select_folder(self, None, self.on_file_selected)
-        else:
-            dialog.open(self, None, self.on_file_selected)
-
-    def on_file_selected(self, dialog, result):
+    def _send_thread(self, path):
         try:
-            if self.is_folder_mode:
-                file = dialog.select_folder_finish(result)
-            else:
-                file = dialog.open_finish(result)
-            
-            if file:
-                self.selected_file_path = file.get_path()
-                self.filename_label.set_text(os.path.basename(self.selected_file_path))
-                self.start_send()
+            is_directory = self.folder_toggle.get_active()
+            ticket = self.core.send(path, is_directory)
+            GLib.idle_add(self.update_qr, ticket)
         except Exception as e:
-            print(f"Error selecting file: {e}")
+            print(f"Send error: {e}")
 
-    def start_send(self):
-        self.file_status_label.set_text("Generating ticket...")
-        self.drop_stack.set_visible_child_name("ticket")
-        
-        def run_send():
-            try:
-                ticket = self.core.send(self.selected_file_path)
-                GLib.idle_add(self.on_send_complete, ticket)
-            except Exception as e:
-                GLib.idle_add(self.on_send_error, str(e))
-
-        threading.Thread(target=run_send, daemon=True).start()
-
-    def on_send_complete(self, ticket):
-        self.current_ticket = ticket
-        self.ticket_label.set_text(ticket)
-        self.file_status_label.set_text("Completed")
-        self.generate_qr(ticket)
-
-    def on_send_error(self, error):
-        self.file_status_label.set_text(f"Error: {error}")
+    def update_qr(self, ticket):
+        self.ticket_label.set_label(f"Ticket: {ticket[:12]}...")
+        pixbuf = self.generate_qr(ticket)
+        self.qr_image.set_from_pixbuf(pixbuf)
 
     def generate_qr(self, data):
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(data)
         qr.make(fit=True)
+        
         img = qr.make_image(fill_color="black", back_color="white")
         
-        # Convert PIL to GdkPixbuf
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        bytes_data = buffer.getvalue()
-        
-        loader = Gdk.PixbufLoader.new_with_type("png")
-        loader.write(bytes_data)
+        # Convert PIL to Pixbuf
+        import io
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        loader = GdkPixbuf.PixbufLoader.new_with_type("png")
+        loader.write(buf.getvalue())
         loader.close()
-        pixbuf = loader.get_pixbuf()
+        return loader.get_pixbuf()
+
+    def on_receive_clicked(self, btn):
+        ticket = self.ticket_entry.get_text().strip()
+        if not ticket: return
         
-        # Convert Pixbuf to Texture for Gtk4
-        texture = Gdk.Texture.new_for_pixbuf(pixbuf)
-        self.qr_image.set_from_paintable(texture)
+        btn.set_sensitive(False)
+        thread = threading.Thread(target=self._receive_thread, args=(ticket,))
+        thread.daemon = True
+        thread.start()
 
-    def on_copy_ticket(self, button):
-        if self.current_ticket:
-            clipboard = self.get_display().get_clipboard()
-            clipboard.set(self.current_ticket)
-
-    def on_paste_ticket(self, button):
-        clipboard = self.get_display().get_clipboard()
-        clipboard.read_text_async(None, self.on_paste_done)
-
-    def on_paste_done(self, clipboard, result):
-        text = clipboard.read_text_finish(result)
-        if text:
-            buffer = self.ticket_entry.get_buffer()
-            buffer.set_text(text)
-
-    def on_clear_ticket(self, button):
-        self.ticket_entry.get_buffer().set_text("")
-
-    def on_receive_clicked(self, button):
-        buffer = self.ticket_entry.get_buffer()
-        ticket = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
-        dest_dir = self.path_label.get_text()
-        
-        self.receive_action_btn.set_sensitive(False)
-        
-        def run_receive():
-            try:
-                self.core.receive(ticket, dest_dir)
-                GLib.idle_add(self.on_receive_complete)
-            except Exception as e:
-                GLib.idle_add(self.on_receive_error, str(e))
-
-        threading.Thread(target=run_receive, daemon=True).start()
+    def _receive_thread(self, ticket):
+        try:
+            # For demo, we receive to Downloads
+            import os
+            dest = os.path.expanduser("~/Downloads")
+            self.core.receive(ticket, dest)
+            GLib.idle_add(self.on_receive_complete)
+        except Exception as e:
+            print(f"Receive error: {e}")
+            GLib.idle_add(lambda: self.receive_btn.set_sensitive(True))
 
     def on_receive_complete(self):
-        self.receive_action_btn.set_sensitive(True)
-        # Show success message/pill
-
-    def on_receive_error(self, error):
-        self.receive_action_btn.set_sensitive(True)
-        print(f"Receive error: {error}")
+        self.receive_btn.set_sensitive(True)
+        self.ticket_entry.set_text("")
+        # Show a notification or dialog here
+        print("Transfer complete!")
