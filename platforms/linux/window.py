@@ -20,6 +20,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         self.is_folder_mode = False
         self.selected_file_path = None
         self.current_ticket = None
+        self.download_path = os.path.expanduser("~/Downloads")
         
         self.set_title("Seyfr")
         self.set_default_size(1400, 950)
@@ -409,6 +410,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         change_btn = Gtk.Button(label="Change")
         change_btn.set_halign(Gtk.Align.END)
         change_btn.set_hexpand(True)
+        change_btn.connect("clicked", self.on_change_save_location)
         save_header.append(change_btn)
         save_card.append(save_header)
         
@@ -417,14 +419,14 @@ class SeyfrWindow(Adw.ApplicationWindow):
         loc_box.append(loc_icon)
         
         loc_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        loc_name = Gtk.Label(label="Downloads")
-        loc_name.set_halign(Gtk.Align.START)
-        loc_info.append(loc_name)
+        self.loc_name_label = Gtk.Label(label="Downloads")
+        self.loc_name_label.set_halign(Gtk.Align.START)
+        loc_info.append(self.loc_name_label)
         
-        loc_path = Gtk.Label(label="~/Downloads")
-        loc_path.add_css_class("dim-label")
-        loc_path.set_halign(Gtk.Align.START)
-        loc_info.append(loc_path)
+        self.loc_path_label = Gtk.Label(label=self.download_path)
+        self.loc_path_label.add_css_class("dim-label")
+        self.loc_path_label.set_halign(Gtk.Align.START)
+        loc_info.append(self.loc_path_label)
         loc_box.append(loc_info)
         save_card.append(loc_box)
         container.append(save_card)
@@ -533,6 +535,25 @@ class SeyfrWindow(Adw.ApplicationWindow):
         self.qr_image.set_pixel_size(300)
         self.qr_image.set_size_request(300, 300)
 
+    def on_change_save_location(self, button):
+        dialog = Gtk.FileChooserDialog(
+            title="Select Save Location",
+            parent=self,
+            action=Gtk.FileChooserAction.SELECT_FOLDER
+        )
+        dialog.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        dialog.add_button("Select", Gtk.ResponseType.OK)
+        dialog.connect("response", self.on_folder_chooser_response)
+        dialog.show()
+
+    def on_folder_chooser_response(self, dialog, response):
+        if response == Gtk.ResponseType.OK:
+            self.download_path = dialog.get_file().get_path()
+            self.loc_name_label.set_label(os.path.basename(self.download_path) or "Root")
+            self.loc_path_label.set_label(self.download_path)
+            print(f"Download path updated to: {self.download_path}")
+        dialog.destroy()
+
     def on_receive_clicked(self, button):
         ticket = self.receive_entry.get_text()
         if ticket:
@@ -542,10 +563,9 @@ class SeyfrWindow(Adw.ApplicationWindow):
 
     def do_receive(self, ticket):
         try:
-            # Download to ~/Downloads
-            dest_dir = os.path.expanduser("~/Downloads")
-            self.core.receive(ticket, dest_dir)
-            print("Download complete")
+            # Download to selected location
+            self.core.receive(ticket, self.download_path)
+            print(f"Download complete: {self.download_path}")
         except Exception as e:
             print(f"Receive error: {e}")
         finally:
