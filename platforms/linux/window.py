@@ -320,6 +320,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         paste_btn = Gtk.Button(label="Paste")
         paste_btn.set_halign(Gtk.Align.END)
         paste_btn.set_hexpand(True)
+        paste_btn.connect("clicked", self.on_paste_clicked)
         ticket_header.append(paste_btn)
         ticket_card.append(ticket_header)
         
@@ -458,6 +459,15 @@ class SeyfrWindow(Adw.ApplicationWindow):
             print(f"Receive error: {e}")
         finally:
             GLib.idle_add(self.receive_button.set_sensitive, True)
+
+    def on_paste_clicked(self, button):
+        clipboard = self.get_display().get_clipboard()
+        clipboard.read_text_async(None, self.on_clipboard_read)
+
+    def on_clipboard_read(self, clipboard, result):
+        text = clipboard.read_text_finish(result)
+        if text:
+            self.receive_entry.set_text(text)
 
     def on_mode_toggled(self, switch, pspec):
         self.is_folder_mode = switch.get_active()
