@@ -13,6 +13,10 @@
     padding: 0;
 }
 
+.sidebar-content {
+    padding-bottom: 12px;
+}
+
 /* Logo Section Styling */
 .logo-icon {
     font-size: 32pt;
@@ -138,4 +142,60 @@
     padding: 16px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Concentric Rings for Drop Zone */
+.concentric-container {
+    position: relative;
+    min-width: 260px;
+    min-height: 260px;
+}
+
+.concentric-ring {
+    border: 1px solid alpha(@fg_color, 0.05);
+    border-radius: 50%;
+}
+
+.drop-zone:hover .concentric-ring {
+    border-color: alpha(@accent_bg_color, 0.2);
+}
+
+/* Status Indicator */
+.status-container {
+    padding: 16px 24px;
+    border-top: 1px solid alpha(@border_color, 0.1);
+}
+
+.status-dot {
+    background-color: #2ec27e;
+    min-width: 8px;
+    min-height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-label {
+    font-size: 9pt;
+    font-weight: 700;
+    color: @fg_color;
+}
+
+.status-sublabel {
+    font-size: 8pt;
+    opacity: 0.6;
+}
+
+/* Cards & Sections */
+.section-card {
+    background-color: alpha(@fg_color, 0.03);
+    border: 1px solid alpha(@border_color, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.dim-label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    opacity: 0.6;
+    letter-spacing: 0.02em;
 }
