@@ -1,4 +1,4 @@
-/* SEYFR Linux Design System - High Contrast Premium */
+/* SEYFR Linux Design System - Ultra Contrast Fix */
 
 /* Main Colors & Variables */
 @define-color accent_bg_color #3584e4;
@@ -22,20 +22,11 @@
     margin-bottom: 8px;
 }
 
-/* Page Content */
-.page-title {
-    font-size: 36pt;
-    font-weight: 900;
-    margin-bottom: 16px;
-    color: #000000; /* Forced high contrast black */
-}
-
-/* Ensure branding is also dark and prominent */
 .brand-name {
     font-size: 18pt;
     font-weight: 800;
     letter-spacing: 0.05em;
-    color: #000000;
+    color: #000000 !important; /* Forced Black */
 }
 
 /* Navigation List Styling */
@@ -59,10 +50,10 @@
 
 /* Page Content */
 .page-title {
-    font-size: 32pt;
-    font-weight: 800;
-    margin-bottom: 12px;
-    color: @fg_color; /* Ensures visibility in light/dark mode */
+    font-size: 38pt;
+    font-weight: 900;
+    margin-bottom: 16px;
+    color: #000000 !important; /* Forced Black */
 }
 
 /* Drop Zone Overhaul */
@@ -87,7 +78,7 @@
 }
 
 .concentric-ring {
-    border: 1.5px solid alpha(@fg_color, 0.1); /* Increased thickness for visibility */
+    border: 1.5px solid alpha(#000000, 0.15); /* Forced dark rings */
     border-radius: 50%;
 }
 
@@ -112,19 +103,19 @@
 .status-label {
     font-size: 10pt;
     font-weight: 800;
-    color: #242424; /* Darker for light mode */
+    color: #000000 !important;
 }
 
 .status-sublabel {
     font-size: 9pt;
-    color: #444444; /* Darker for light mode */
+    color: #333333 !important;
 }
 
 /* Labels */
 .dim-label {
-    font-size: 10pt;
+    font-size: 11pt;
     font-weight: 600;
-    color: #555555; /* Higher contrast gray */
+    color: #444444 !important; /* High contrast gray */
 }
 
 /* Action Buttons */
