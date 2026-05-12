@@ -381,20 +381,33 @@ class SeyfrWindow(Adw.ApplicationWindow):
         ticket_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         ticket_card.add_css_class("section-card")
         
-        ticket_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        ticket_header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         ticket_label = Gtk.Label(label="Enter ticket")
         ticket_label.add_css_class("status-label")
         ticket_header.append(ticket_label)
         
+        # Action Buttons Container
+        actions_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+        actions_box.set_halign(Gtk.Align.END)
+        actions_box.set_hexpand(True)
+        
         paste_btn = Gtk.Button(label="Paste")
-        paste_btn.set_halign(Gtk.Align.END)
-        paste_btn.set_hexpand(True)
+        paste_btn.set_icon_name("edit-paste-symbolic")
         paste_btn.connect("clicked", self.on_paste_clicked)
-        ticket_header.append(paste_btn)
+        actions_box.append(paste_btn)
+        
+        self.clear_receive_btn = Gtk.Button(label="Clear")
+        self.clear_receive_btn.set_icon_name("edit-clear-symbolic")
+        self.clear_receive_btn.set_visible(False) # Hidden by default
+        self.clear_receive_btn.connect("clicked", self.on_clear_receive_clicked)
+        actions_box.append(self.clear_receive_btn)
+        
+        ticket_header.append(actions_box)
         ticket_card.append(ticket_header)
         
         self.receive_entry = Gtk.Entry()
         self.receive_entry.set_placeholder_text("Paste ticket here...")
+        self.receive_entry.connect("changed", self.on_receive_entry_changed)
         ticket_card.append(self.receive_entry)
         container.append(ticket_card)
         
@@ -599,6 +612,13 @@ class SeyfrWindow(Adw.ApplicationWindow):
         text = clipboard.read_text_finish(result)
         if text:
             self.receive_entry.set_text(text)
+
+    def on_clear_receive_clicked(self, button):
+        self.receive_entry.set_text("")
+
+    def on_receive_entry_changed(self, entry):
+        has_text = len(entry.get_text().strip()) > 0
+        self.clear_receive_btn.set_visible(has_text)
 
     def on_mode_toggled(self, switch, pspec):
         self.is_folder_mode = switch.get_active()
