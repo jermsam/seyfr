@@ -310,7 +310,39 @@ class SeyfrWindow(Adw.ApplicationWindow):
         self.ticket_entry.set_editable(False)
         self.ticket_card.append(self.ticket_entry)
         
+        # Action Buttons Row
+        actions_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        actions_row.set_margin_top(12)
+        
+        copy_btn = Gtk.Button(label="Copy")
+        copy_btn.set_icon_name("edit-copy-symbolic")
+        copy_btn.add_css_class("pill")
+        copy_btn.set_hexpand(True)
+        copy_btn.connect("clicked", self.on_copy_ticket_clicked)
+        actions_row.append(copy_btn)
+        
+        share_btn = Gtk.Button(label="Share")
+        share_btn.set_icon_name("emblem-shared-symbolic")
+        share_btn.add_css_class("pill")
+        share_btn.set_hexpand(True)
+        actions_row.append(share_btn)
+        
+        self.ticket_card.append(actions_row)
         self.transfer_container.append(self.ticket_card)
+        
+        # Success Status Bar (Toast-like)
+        self.success_status = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        self.success_status.add_css_class("section-card")
+        self.success_status.set_margin_top(24)
+        
+        status_check = Gtk.Image.new_from_icon_name("emblem-ok-symbolic")
+        self.success_status.append(status_check)
+        
+        status_label = Gtk.Label(label="Ready to share")
+        status_label.add_css_class("status-label")
+        self.success_status.append(status_label)
+        
+        self.transfer_container.append(self.success_status)
         
         self.send_stack.add_named(self.transfer_container, "transfer")
         
@@ -474,6 +506,11 @@ class SeyfrWindow(Adw.ApplicationWindow):
         self.current_ticket = ticket
         self.ticket_entry.set_text(ticket)
         self.generate_qr(ticket)
+
+    def on_copy_ticket_clicked(self, button):
+        if self.current_ticket:
+            clipboard = self.get_display().get_clipboard()
+            clipboard.set_text(self.current_ticket)
 
     def generate_qr(self, data):
         qr = qrcode.QRCode(version=1, box_size=15, border=4)
