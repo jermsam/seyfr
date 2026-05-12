@@ -555,21 +555,41 @@ class SeyfrWindow(Adw.ApplicationWindow):
         dialog.destroy()
 
     def on_receive_clicked(self, button):
-        ticket = self.receive_entry.get_text()
-        if ticket:
-            self.receive_button.set_sensitive(False)
-            thread = threading.Thread(target=self.do_receive, args=(ticket,))
-            thread.start()
+        ticket = self.receive_entry.get_text().strip()
+        if not ticket:
+            print("Error: No ticket entered")
+            return
+            
+        if not os.path.exists(self.download_path):
+            print(f"Error: Save location does not exist: {self.download_path}")
+            return
+
+        self.receive_button.set_sensitive(False)
+        self.receive_button.set_label("Downloading...")
+        print(f"Attempting to receive ticket: {ticket} to {self.download_path}")
+        
+        thread = threading.Thread(target=self.do_receive, args=(ticket,))
+        thread.start()
 
     def do_receive(self, ticket):
         try:
-            # Download to selected location
+            # Call the core receive logic
             self.core.receive(ticket, self.download_path)
-            print(f"Download complete: {self.download_path}")
+            print(f"SUCCESS: Download complete at {self.download_path}")
+            GLib.idle_add(self.show_receive_success)
         except Exception as e:
-            print(f"Receive error: {e}")
+            print(f"CRITICAL RECEIVE ERROR: {e}")
+            GLib.idle_add(self.show_receive_error, str(e))
         finally:
             GLib.idle_add(self.receive_button.set_sensitive, True)
+            GLib.idle_add(self.receive_button.set_label, "Receive File")
+
+    def show_receive_success(self):
+        # We could use a toast here, for now just update console
+        print("UI: Download finished successfully")
+
+    def show_receive_error(self, error_msg):
+        print(f"UI Error: {error_msg}")
 
     def on_paste_clicked(self, button):
         clipboard = self.get_display().get_clipboard()
