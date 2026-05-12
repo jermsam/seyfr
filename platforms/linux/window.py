@@ -222,9 +222,9 @@ class SeyfrWindow(Adw.ApplicationWindow):
         
         # Drag & Drop Label
         labels_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        dd_label = Gtk.Label(label="Drag & drop files here")
-        dd_label.add_css_class("status-label")
-        labels_box.append(dd_label)
+        self.file_label = Gtk.Label(label="Drag & drop files here")
+        self.file_label.add_css_class("status-label")
+        labels_box.append(self.file_label)
         
         browse_label = Gtk.Label(label="or click to browse")
         browse_label.add_css_class("dim-label")
@@ -402,7 +402,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
     def on_file_chooser_response(self, dialog, response):
         if response == Gtk.ResponseType.OK:
             self.selected_file_path = dialog.get_file().get_path()
-            self.drop_label.set_label(os.path.basename(self.selected_file_path))
+            self.file_label.set_label(os.path.basename(self.selected_file_path))
             self.send_button.set_sensitive(True)
         dialog.destroy()
 

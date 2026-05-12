@@ -1,4 +1,4 @@
-/* SEYFR Linux Design System - Final Polish */
+/* SEYFR Linux Design System - Polished & Optimized */
 
 /* Main Colors & Variables */
 @define-color accent_bg_color #3584e4;
@@ -25,8 +25,8 @@
 .brand-name {
     font-size: 20pt;
     font-weight: 800;
-    letter-spacing: 0.1em; /* Increased spacing */
-    color: #000000 !important;
+    letter-spacing: 0.1em;
+    color: #000000;
 }
 
 /* Navigation List Styling */
@@ -53,7 +53,7 @@
     font-size: 42pt;
     font-weight: 950;
     margin-bottom: 20px;
-    color: #000000 !important;
+    color: #000000;
 }
 
 /* Drop Zone Overhaul */
@@ -70,14 +70,10 @@
     border-color: alpha(@accent_bg_color, 0.3);
 }
 
-/* Concentric Rings - Cleaned up */
-.concentric-container {
-    /* Removed 'position: relative' as it's not supported in GTK CSS */
-}
-
+/* Concentric Rings */
 .concentric-ring {
     border: 1px solid alpha(#000000, 0.12);
-    border-radius: 1000px; /* Force perfect circles */
+    border-radius: 1000px;
 }
 
 .drop-zone:hover .concentric-ring {
@@ -101,19 +97,19 @@
 .status-label {
     font-size: 11pt;
     font-weight: 800;
-    color: #000000 !important;
+    color: #000000;
 }
 
 .status-sublabel {
     font-size: 10pt;
-    color: #444444 !important;
+    color: #444444;
 }
 
 /* Labels */
 .dim-label {
     font-size: 12pt;
     font-weight: 600;
-    color: #555555 !important;
+    color: #555555;
 }
 
 /* Action Buttons */
@@ -122,7 +118,6 @@
     padding: 14px 40px;
     font-weight: 800;
     font-size: 13pt;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .suggested-action.pill {
