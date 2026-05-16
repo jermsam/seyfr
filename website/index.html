@@ -1,501 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Meta Tags -->
-  <title>Seyfr - Send Your Files Right</title>
-  <meta name="description" content="Experience true peer-to-peer file sharing with end-to-end encryption, no file size limits, and complete privacy. Free, secure, and fast file transfers.">
-  <meta name="keywords" content="file sharing, peer-to-peer, P2P, secure file transfer, end-to-end encryption, privacy, free file sharing, Seyfr">
-  <meta name="author" content="Jitpomi">
-  <meta name="theme-color" content="#f9f9fa">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Seyfr — Send Your Files Right</title>
+
+  <meta name="description" content="Seyfr helps you move files between devices simply. Built by JITPOMI." />
   
   <!-- Open Graph / Social -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Seyfr - Send Your Files Right">
-  <meta property="og:description" content="Experience true peer-to-peer file sharing with end-to-end encryption, no file size limits, and complete privacy. Free, secure, and fast file transfers.">
-  <meta property="og:image" content="https://seyfr.jitpomi.com/assets/seyfrimg.webp">
-  <meta property="og:url" content="https://seyfr.jitpomi.com/">
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Seyfr — Send Your Files Right" />
+  <meta property="og:description" content="Move files between devices without extra friction." />
+  <meta property="og:image" content="https://seyfr.jitpomi.com/assets/seyfr-ogs/og-image.png" />
+  <meta property="og:url" content="https://seyfr.jitpomi.com/" />
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://seyfr.jitpomi.com/assets/seyfr-ogs/twitter-image.png" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Favicon & Icons -->
+  <link rel="icon" href="assets/seyfr_icons/seyfr.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/seyfr_icons/seyfr_32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/seyfr_icons/seyfr_16.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="assets/seyfr_icons/seyfr_512.png" />
+  <link rel="apple-touch-icon" sizes="256x256" href="assets/seyfr_icons/seyfr_256.png" />
 
   <style>
-    /* Reset & Base Variables */
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    :root {
-      --bg-color: #f9f9fa;
-      --text-main: #1a1a1a;
-      --text-muted: #666666;
-      --accent: #2563EB;
-      --card-bg: #ffffff;
-      --card-border: rgba(0, 0, 0, 0.05);
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Segoe UI",
+        sans-serif;
+
+      background: #f5f5f7;
+      color: #1d1d1f;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Container */
-    .container {
-      max-width: 1200px;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      max-width: 1220px;
       margin: 0 auto;
-      padding: 0 24px;
-      width: 100%;
+      padding: 24px 28px 80px;
     }
 
-    /* Navigation */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 0;
-      animation: fadeInDown 0.8s ease forwards;
+
+      color: #6e6e73;
+      font-size: 14px;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
-      text-decoration: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      transition: color 0.2s ease;
-    }
-    
-    .nav-links a:hover {
-      color: var(--text-main);
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 100px 0 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: fadeInUp 1s ease forwards;
-    }
-
-    .pill {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 6px 16px;
-      border-radius: 100px;
-      font-size: 14px;
       font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      display: inline-block;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      color: #1d1d1f;
+      letter-spacing: -0.02em;
+    }
+
+    .hero {
+      min-height: 88vh;
+
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      align-items: center;
+      gap: 40px;
+
+      padding: 80px 0 40px;
+    }
+
+    .eyebrow {
+      font-size: 16px;
+      color: #6e6e73;
+      margin-bottom: 18px;
     }
 
     h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(40px, 8vw, 84px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      color: var(--text-main);
-      max-width: 900px;
-    }
+      margin: 0;
 
-    .subtitle {
-      font-size: clamp(18px, 4vw, 22px);
-      color: var(--text-muted);
-      max-width: 740px;
-      margin-bottom: 48px;
-    }
+      max-width: 520px;
 
-    .subtitle strong {
-      color: var(--accent);
+      font-size: clamp(64px, 8vw, 108px);
+      line-height: 0.94;
+      letter-spacing: -0.085em;
       font-weight: 600;
     }
 
-    /* Buttons */
-    .cta-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .sub {
+      margin-top: 26px;
+
+      max-width: 420px;
+
+      font-size: 22px;
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+
+      color: #4a4a4f;
     }
 
-    .btn {
+    .actions {
+      margin-top: 34px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 14px 28px;
-      border-radius: 12px;
+
+      height: 48px;
+      padding: 0 22px;
+
+      border-radius: 999px;
+
+      background: #1d1d1f;
+      color: white;
+
+      font-size: 15px;
       font-weight: 600;
-      font-size: 16px;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+      transition: opacity 0.2s ease;
     }
 
-    .btn-primary {
-      background: var(--text-main);
-      color: var(--card-bg);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    .button:hover {
+      opacity: 0.88;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    .platforms {
+      color: #6e6e73;
+      font-size: 14px;
     }
 
-    /* Showcase Image */
-    .showcase-wrapper {
-      margin-top: 60px;
-      perspective: 1000px;
-      animation: floatIn 1.2s ease-out forwards;
-      opacity: 0;
-      padding-bottom: 60px;
+    .visual {
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .showcase-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 12px;
-      max-width: 1000px;
-      margin: 0 auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    }
+    .visual img {
+      width: min(860px, 118%);
+      max-width: none;
 
-    .showcase-container img {
-      width: 100%;
-      height: auto;
       display: block;
-      border-radius: 16px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+
+      filter:
+        drop-shadow(0 32px 60px rgba(0,0,0,0.16));
     }
 
-    /* Installation Help Section */
-    .security-notice {
-      background: var(--card-bg);
-      border: 1px solid #ffd700;
-      border-radius: 16px;
-      padding: 32px;
-      margin: 60px auto;
-      max-width: 900px;
-      text-align: left;
-      box-shadow: 0 4px 24px rgba(255, 215, 0, 0.1);
+    .section {
+      padding: 110px 0;
     }
 
-    .security-notice h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 24px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .security-notice p {
-      margin-bottom: 16px;
-      color: var(--text-muted);
-    }
-
-    .security-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 24px;
-    }
-
-    .os-card {
-      background: #fafafa;
-      border: 1px solid var(--card-border);
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    .os-card h4 {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .os-card ol {
-      margin-left: 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    .os-card li {
-      margin-bottom: 8px;
-    }
-
-    .sponsor-link {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .sponsor-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Downloads Section */
-    .downloads {
-      margin: 0 0 100px;
-      text-align: center;
-    }
-
-    .downloads h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 32px;
-      margin-bottom: 32px;
-    }
-
-    .download-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 900px;
+    .line {
+      max-width: 760px;
       margin: 0 auto;
-    }
-
-    .download-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: left;
-      text-decoration: none;
-      color: var(--text-main);
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-    }
-
-    .download-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.06);
-    }
-
-    .download-card .icon {
-      font-size: 28px;
-      margin-bottom: 4px;
-    }
-
-    .download-card .platform {
-      font-size: 14px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-    }
-
-    .download-card .action {
-      font-size: 18px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .download-card .desc {
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid rgba(0,0,0,0.05);
-      padding: 40px 0;
       text-align: center;
-      color: var(--text-muted);
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: 1;
+      letter-spacing: -0.07em;
+      font-weight: 600;
+    }
+
+    .shot {
+      margin-top: 56px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .shot img {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+    }
+
+    .download {
+      margin: 40px auto 0;
+
+      max-width: 760px;
+
+      text-align: center;
+    }
+
+    .download h2 {
+      margin: 0;
+
+      font-size: clamp(40px, 6vw, 72px);
+      line-height: 1;
+      letter-spacing: -0.07em;
+      font-weight: 600;
+    }
+
+    .download p {
+      margin: 18px auto 30px;
+
+      max-width: 480px;
+
+      color: #6e6e73;
+
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    footer {
+      margin-top: 120px;
+      padding-top: 22px;
+
+      border-top: 1px solid #d2d2d7;
+
+      display: flex;
+      justify-content: space-between;
+
+      color: #6e6e73;
       font-size: 14px;
-      margin-top: auto;
     }
 
-    footer a {
-      color: var(--text-main);
-      text-decoration: none;
+    @media (max-width: 920px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+
+        padding-top: 90px;
+      }
+
+      .visual {
+        margin-top: 20px;
+      }
+
+      .visual img {
+        width: 100%;
+      }
+
+      .sub {
+        font-size: 20px;
+      }
     }
 
-    .powered-by {
-      margin-bottom: 16px;
-    }
+    @media (max-width: 560px) {
+      .wrap {
+        padding: 20px 18px 64px;
+      }
 
-    /* Animations */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+      h1 {
+        font-size: 56px;
+      }
 
-    @keyframes floatIn {
-      0% { opacity: 0; transform: rotateX(10deg) translateY(40px) scale(0.95); }
-      100% { opacity: 1; transform: rotateX(0deg) translateY(0) scale(1); }
-    }
-
-    @media (max-width: 768px) {
-      .security-grid { grid-template-columns: 1fr; }
-      .hero { padding: 60px 0 40px; }
-      .cta-group { flex-direction: column; width: 100%; max-width: 300px; }
-      .showcase-wrapper { margin-top: 40px; }
+      footer {
+        display: block;
+        line-height: 1.9;
+      }
     }
   </style>
 </head>
-<body>
 
-  <div class="container">
-    <nav aria-label="Main Navigation">
-      <a href="/" class="brand">
-        <img src="assets/jitpomi.png" alt="Logo" width="28" height="28" style="border-radius: 6px;">
+<body>
+  <div class="wrap">
+
+    <nav>
+      <a class="brand" href="/" style="display: flex; align-items: center; gap: 8px;">
+        <img src="assets/seyfr_icons/seyfr_32.png" alt="Seyfr Logo" width="24" height="24" style="border-radius: 4px;" />
         SEYFR
       </a>
-      <div class="nav-links">
-        <a href="https://jitpomi.com" target="_blank" rel="noopener noreferrer">By JITPOMI</a>
+
+      <div>
+        <a href="https://github.com/Jitpomi/seyfr" target="_blank" style="color: #6e6e73; font-weight: 500;">Documentation</a>
       </div>
     </nav>
 
     <main>
-      <section class="hero">
-        <div class="pill">v2.0 Beta — Rust Powered</div>
-        <h1>Send Your Files Right.</h1>
-        <p class="subtitle">Experience true peer-to-peer file sharing with <strong>end-to-end encryption</strong>, <strong>no file size limits</strong>, and <strong>complete privacy</strong>. Free, secure, and fast file transfers.</p>
-        
-        <div class="cta-group">
-          <a href="#downloads" class="btn btn-primary">Download Seyfr</a>
-        </div>
-      </section>
 
-      <section class="showcase-wrapper">
-        <div class="showcase-container">
+      <section class="hero">
+
+        <div>
+
+          <div class="eyebrow">
+            SEYFR
+          </div>
+
+          <h1>
+            Send Your Files Right.
+          </h1>
+
+          <div class="sub">
+            Move files between devices without extra friction.
+          </div>
+
+          <div class="actions">
+
+            <a class="button" href="#download">
+              Download SEYFR
+            </a>
+
+            <div class="platforms">
+              macOS · Windows · Linux · Android
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="visual">
           <picture>
             <source media="(max-width: 560px)" srcset="assets/seyfrmobile.webp">
-            <img src="assets/seyfrimg.webp" alt="Seyfr Cross-Platform UI" width="1800" height="1130" fetchpriority="high" decoding="async">
+            <img src="assets/seyfr.png" alt="Seyfr running on desktop and mobile devices" fetchpriority="high" />
+          </picture>
+        </div>
+
+      </section>
+
+      <section class="section">
+        <div class="line">
+          Send from one device. Receive on another.
+        </div>
+        
+        <div style="max-width: 720px; margin: 24px auto 0; text-align: center; color: #4a4a4f; font-size: 24px; line-height: 1.45; letter-spacing: -0.03em;">
+          Available on all PCs, Macs, Android phones, and Apple iPhones.
+        </div>
+
+        <div class="shot">
+          <picture>
+            <source media="(max-width: 560px)" srcset="assets/seyfrmobile.webp">
+            <img src="assets/seyfrimg.webp" alt="Seyfr seamlessly working across devices" loading="lazy" />
           </picture>
         </div>
       </section>
 
-      <section class="security-notice">
-        <h3>🛡️ See a security warning?</h3>
-        <p>This is normal for software without expensive code signing certificates. The warnings are about "unknown publisher," not malware detection. We recommend scanning with antivirus before installation.</p>
-        
-        <div class="security-grid">
-          <div class="os-card">
-            <h4>🪟 Windows</h4>
-            <p style="font-size: 14px; margin-bottom: 8px;">For reliable installation:</p>
-            <ol>
-              <li>Right-click downloaded file → Properties</li>
-              <li>Check "Unblock" → OK</li>
-              <li>Then run installer normally</li>
-            </ol>
-          </div>
-          
-          <div class="os-card">
-            <h4>🍎 macOS</h4>
-            <p style="font-size: 14px; margin-bottom: 8px;">Complete installation steps:</p>
-            <ol>
-              <li>Download Seyfr.dmg and double-click to mount</li>
-              <li>Drag Seyfr.app to Applications folder</li>
-              <li>Open Terminal and run:<br><code>xattr -dr com.apple.quarantine /Applications/Seyfr.app</code></li>
-              <li>Open Seyfr - no warnings will appear</li>
-            </ol>
-          </div>
-        </div>
+      <section class="download" id="download">
 
-        <p style="margin-top: 24px; font-size: 14px; text-align: center;">
-          💡 Want to help eliminate these warnings? <a href="https://github.com/sponsors/Jitpomi?o=sd&sc=t" class="sponsor-link" target="_blank">Sponsor Seyfr</a> to help us afford code signing certificates ($400+/year).
+        <h2>
+          Download SEYFR.
+        </h2>
+
+        <p>
+          Simple file sharing across your devices.
         </p>
+
+        <a class="button" href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank">
+          Download
+        </a>
+
       </section>
 
-      <section id="downloads" class="downloads">
-        <h2>Installation Packages</h2>
-        <div class="download-grid">
-          
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" class="download-card" aria-label="Download for macOS Apple Silicon">
-            <div class="icon">🍎</div>
-            <span class="platform">macOS Apple Silicon</span>
-            <span class="action">Download .dmg <span aria-hidden="true">→</span></span>
-            <span class="desc">For M-series processors</span>
-          </a>
-
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" class="download-card" aria-label="Download for macOS Intel">
-            <div class="icon">💻</div>
-            <span class="platform">macOS Intel</span>
-            <span class="action">Download .dmg <span aria-hidden="true">→</span></span>
-            <span class="desc">For Intel processors</span>
-          </a>
-
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" class="download-card" aria-label="Download for Windows 64-bit">
-            <div class="icon">🪟</div>
-            <span class="platform">Windows 64-bit</span>
-            <span class="action">Download .exe <span aria-hidden="true">→</span></span>
-            <span class="desc">For modern PCs</span>
-          </a>
-
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x86.exe" class="download-card" aria-label="Download for Windows 32-bit">
-            <div class="icon">🪟</div>
-            <span class="platform">Windows 32-bit</span>
-            <span class="action">Download .exe <span aria-hidden="true">→</span></span>
-            <span class="desc">For older PCs</span>
-          </a>
-
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/MicrosoftEdgeWebview2Setup.exe" class="download-card" aria-label="Download WebView2">
-            <div class="icon">⚡</div>
-            <span class="platform">WebView2 Runtime</span>
-            <span class="action">Download <span aria-hidden="true">→</span></span>
-            <span class="desc">Required for Windows</span>
-          </a>
-
-          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" class="download-card" aria-label="Download for Linux">
-            <div class="icon">🐧</div>
-            <span class="platform">Linux</span>
-            <span class="action">Download .AppImage <span aria-hidden="true">→</span></span>
-            <span class="desc">Various distributions</span>
-          </a>
-
-        </div>
-      </section>
     </main>
-  </div>
 
-  <footer>
-    <div class="container">
-      <div class="powered-by">
-        Powered by <a href="https://www.iroh.computer" target="_blank">Iroh</a> and <a href="https://dioxuslabs.com" target="_blank">Dioxus</a>
+    <footer>
+
+      <div>
+        Built by JITPOMI
       </div>
-      &copy; 2026 <a href="https://jitpomi.com" target="_blank">JITPOMI LLC</a>. Open source and local first.
-    </div>
-  </footer>
 
+      <div>
+        <a href="https://jitpomi.com">
+          jitpomi.com
+        </a>
+      </div>
+
+    </footer>
+
+  </div>
 </body>
 </html>
