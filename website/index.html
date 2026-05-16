@@ -350,9 +350,19 @@
           Simple file sharing across your devices.
         </p>
 
-        <a class="button" href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank">
-          Download
+        <a id="primary-download-btn" class="button" href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank" style="margin-bottom: 24px;">
+          Download SEYFR
         </a>
+        
+        <div style="font-size: 14px; color: #6e6e73;">
+          Also available for: 
+          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" style="color: #1d1d1f; text-decoration: underline;" title="Apple Silicon">macOS (M-Series)</a>, 
+          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" style="color: #1d1d1f; text-decoration: underline;" title="Intel Macs">macOS (Intel)</a>, 
+          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" style="color: #1d1d1f; text-decoration: underline;">Windows</a>, 
+          <a href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" style="color: #1d1d1f; text-decoration: underline;">Linux</a>, 
+          <span style="color: #86868b; cursor: not-allowed;" title="Coming soon to the Play Store">Android</span>, 
+          <span style="color: #86868b; cursor: not-allowed;" title="Coming soon to the App Store">iOS</span>
+        </div>
 
       </section>
 
@@ -373,5 +383,34 @@
     </footer>
 
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('primary-download-btn');
+      const ua = navigator.userAgent.toLowerCase();
+      
+      if (ua.indexOf('win') > -1) {
+        btn.textContent = 'Download for Windows';
+        btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe';
+      } else if (ua.indexOf('mac') > -1 && ua.indexOf('iphone') === -1 && ua.indexOf('ipad') === -1) {
+        btn.textContent = 'Download for macOS';
+        // Defaulting to Apple Silicon for modern Macs. Intel users can use the specific link below.
+        btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg';
+      } else if (ua.indexOf('linux') > -1 && ua.indexOf('android') === -1) {
+        btn.textContent = 'Download for Linux';
+        btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage';
+      } else if (ua.indexOf('android') > -1) {
+        btn.textContent = 'Coming Soon to Android';
+        btn.href = '#';
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+      } else if (ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1) {
+        btn.textContent = 'Coming Soon to iOS';
+        btn.href = '#';
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+      }
+    });
+  </script>
 </body>
 </html>
