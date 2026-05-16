@@ -30,13 +30,12 @@
     }
 
     :root {
-      --bg-color: #0A0A0B;
-      --text-main: #FFFFFF;
-      --text-muted: #8F9098;
+      --bg-color: #f9f9fa;
+      --text-main: #1a1a1a;
+      --text-muted: #666666;
       --accent: #2563EB;
-      --accent-glow: rgba(37, 99, 235, 0.4);
-      --glass-bg: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
+      --card-bg: #ffffff;
+      --card-border: rgba(0, 0, 0, 0.05);
     }
 
     body {
@@ -47,21 +46,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-    }
-
-    /* Ambient Background Glow */
-    body::before {
-      content: '';
-      position: absolute;
-      top: -20vh;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80vw;
-      height: 60vh;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
-      opacity: 0.5;
-      z-index: -1;
-      pointer-events: none;
     }
 
     /* Container */
@@ -116,16 +100,16 @@
     }
 
     .pill {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       padding: 6px 16px;
       border-radius: 100px;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 32px;
-      backdrop-filter: blur(10px);
       display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
 
     h1 {
@@ -135,9 +119,7 @@
       line-height: 1.1;
       letter-spacing: -2px;
       margin-bottom: 24px;
-      background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text-main);
       max-width: 900px;
     }
 
@@ -170,24 +152,24 @@
 
     .btn-primary {
       background: var(--text-main);
-      color: var(--bg-color);
-      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+      color: var(--card-bg);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
 
     .btn-secondary {
-      background: var(--glass-bg);
+      background: var(--card-bg);
       color: var(--text-main);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
 
     .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: #f1f1f1;
       transform: translateY(-2px);
     }
 
@@ -201,14 +183,13 @@
     }
 
     .showcase-container {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 24px;
       padding: 12px;
       max-width: 1000px;
       margin: 0 auto;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     }
 
     .showcase-container img {
@@ -216,8 +197,7 @@
       height: auto;
       display: block;
       border-radius: 16px;
-      /* Subtle inner glow */
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
     }
 
     /* Downloads Section */
@@ -241,8 +221,8 @@
     }
 
     .download-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 24px;
       text-align: left;
@@ -252,12 +232,12 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
 
     .download-card:hover {
-      background: rgba(255, 255, 255, 0.06);
       transform: translateY(-4px);
-      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.06);
     }
 
     .download-card .platform {
@@ -278,7 +258,7 @@
 
     /* Footer */
     footer {
-      border-top: 1px solid var(--glass-border);
+      border-top: 1px solid rgba(0,0,0,0.05);
       padding: 40px 0;
       text-align: center;
       color: var(--text-muted);
