@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>Seyfr — Fast, Local-First File Transfers.</title>
+  <meta name="description" content="Seyfr is a blazingly fast, cross-platform file transfer tool built in Rust. Move files directly between devices securely over your local network.">
+  
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Seyfr — Fast, Local-First File Transfers.">
+  <meta property="og:description" content="Move files directly between devices securely over your local network.">
+  <meta property="og:image" content="https://seyfr.jitpomi.com/assets/seyfrimg.webp">
+  <meta property="og:url" content="https://seyfr.jitpomi.com/">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset & Base Variables */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    :root {
+      --bg-color: #0A0A0B;
+      --text-main: #FFFFFF;
+      --text-muted: #8F9098;
+      --accent: #2563EB;
+      --accent-glow: rgba(37, 99, 235, 0.4);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Ambient Background Glow */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -20vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 60vh;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+      opacity: 0.5;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      animation: fadeInDown 0.8s ease forwards;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: color 0.2s ease;
+    }
+    
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 100px 0 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .pill {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(40px, 8vw, 84px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      max-width: 900px;
+    }
+
+    .subtitle {
+      font-size: clamp(18px, 4vw, 22px);
+      color: var(--text-muted);
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    /* Buttons */
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary {
+      background: var(--text-main);
+      color: var(--bg-color);
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Showcase Image */
+    .showcase-wrapper {
+      margin-top: 60px;
+      perspective: 1000px;
+      animation: floatIn 1.2s ease-out forwards;
+      opacity: 0;
+      padding-bottom: 60px;
+    }
+
+    .showcase-container {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 12px;
+      max-width: 1000px;
+      margin: 0 auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+    }
+
+    .showcase-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 16px;
+      /* Subtle inner glow */
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    /* Downloads Section */
+    .downloads {
+      margin: 60px 0 100px;
+      text-align: center;
+    }
+
+    .downloads h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      margin-bottom: 32px;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .download-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: left;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .download-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .download-card .platform {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .download-card .action {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatIn {
+      0% { opacity: 0; transform: rotateX(10deg) translateY(40px) scale(0.95); }
+      100% { opacity: 1; transform: rotateX(0deg) translateY(0) scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 60px 0 40px; }
+      .cta-group { flex-direction: column; width: 100%; max-width: 300px; }
+      .showcase-wrapper { margin-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <nav aria-label="Main Navigation">
+      <a href="/" class="brand">
+        <img src="assets/jitpomi.png" alt="Logo" width="28" height="28" style="border-radius: 6px;">
+        SEYFR
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/Jitpomi/seyfr" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="pill">v2.0 Beta — Rust Powered</div>
+        <h1>Move files faster than ever before.</h1>
+        <p class="subtitle">A blazingly fast, local-first file transfer application built for modern workflows. No clouds, no limits, purely native.</p>
+        
+        <div class="cta-group">
+          <a href="#downloads" class="btn btn-primary">Download Seyfr</a>
+          <a href="https://github.com/Jitpomi/seyfr" target="_blank" class="btn btn-secondary">View Source</a>
+        </div>
+      </section>
+
+      <section class="showcase-wrapper">
+        <div class="showcase-container">
+          <picture>
+            <source media="(max-width: 560px)" srcset="assets/seyfrmobile.webp">
+            <img src="assets/seyfrimg.webp" alt="Seyfr Cross-Platform UI" width="1800" height="1130" fetchpriority="high" decoding="async">
+          </picture>
+        </div>
+      </section>
+
+      <section id="downloads" class="downloads">
+        <h2>Native Apps for Every Platform</h2>
+        <div class="download-grid">
+          
+          <a href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank" class="download-card" aria-label="Download for macOS">
+            <span class="platform">Apple Silicon & Intel</span>
+            <span class="action">macOS <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank" class="download-card" aria-label="Download for Windows">
+            <span class="platform">Windows 10/11</span>
+            <span class="action">Windows (.exe) <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a href="https://github.com/Jitpomi/seyfr/releases/latest" target="_blank" class="download-card" aria-label="Download for Linux">
+            <span class="platform">Debian & Ubuntu</span>
+            <span class="action">Linux (.AppImage) <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a href="#" class="download-card" style="opacity: 0.6; pointer-events: none;" aria-label="Coming soon to iOS">
+            <span class="platform">iOS & iPadOS</span>
+            <span class="action">App Store (Soon) <span aria-hidden="true">→</span></span>
+          </a>
+
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 <a href="https://jitpomi.com" target="_blank">JITPOMI LLC</a>. Open source and local first.
+    </div>
+  </footer>
+
+</body>
+</html>
