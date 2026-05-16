@@ -535,7 +535,7 @@ class SeyfrWindow(Adw.ApplicationWindow):
         img = qr.make_image(fill_color="black", back_color="white")
         
         buf = BytesIO()
-        img.save(buf, format="PNG")
+        img.save(buf, kind="PNG")
         image_data = buf.getvalue()
         
         loader = GdkPixbuf.PixbufLoader.new_with_type("png")
