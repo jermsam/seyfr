@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.components
+package com.jitpomi.seyfr.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box

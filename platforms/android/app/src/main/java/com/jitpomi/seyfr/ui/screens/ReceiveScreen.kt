@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.screens
+package com.jitpomi.seyfr.ui.screens
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -54,11 +54,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.example.seyfr.AppUiState
-import com.example.seyfr.TransferStatus
-import com.example.seyfr.ui.components.PrimaryButton
-import com.example.seyfr.ui.components.QRRings
-import com.example.seyfr.ui.components.QRScanner
+import com.jitpomi.seyfr.AppUiState
+import com.jitpomi.seyfr.TransferStatus
+import com.jitpomi.seyfr.ui.components.PrimaryButton
+import com.jitpomi.seyfr.ui.components.QRRings
+import com.jitpomi.seyfr.ui.components.QRScanner
 
 @Composable
 fun ReceiveScreen(

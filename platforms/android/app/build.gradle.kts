@@ -9,11 +9,11 @@ if (file("../../target/jffi/generated/android/jffi-bundle.gradle").exists()) {
 }
 
 android {
-    namespace = "com.example.seyfr"
+    namespace = "com.jitpomi.seyfr"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.seyfr"
+        applicationId = "com.jitpomi.seyfr"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -28,8 +28,18 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("release.keystore")
+            storePassword = "jitpomiseyfr"
+            keyAlias = "release"
+            keyPassword = "jitpomiseyfr"
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.theme
+package com.jitpomi.seyfr.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

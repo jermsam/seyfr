@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.screens
+package com.jitpomi.seyfr.ui.screens
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -53,13 +53,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.seyfr.AppUiState
-import com.example.seyfr.TransferStatus
-import com.example.seyfr.ui.components.FileRings
-import com.example.seyfr.ui.components.FolderRings
-import com.example.seyfr.ui.components.PrimaryButton
-import com.example.seyfr.ui.components.QRCodeView
-import com.example.seyfr.ui.components.SecondaryButton
+import com.jitpomi.seyfr.AppUiState
+import com.jitpomi.seyfr.TransferStatus
+import com.jitpomi.seyfr.ui.components.FileRings
+import com.jitpomi.seyfr.ui.components.FolderRings
+import com.jitpomi.seyfr.ui.components.PrimaryButton
+import com.jitpomi.seyfr.ui.components.QRCodeView
+import com.jitpomi.seyfr.ui.components.SecondaryButton
 
 @Composable
 fun SendScreen(

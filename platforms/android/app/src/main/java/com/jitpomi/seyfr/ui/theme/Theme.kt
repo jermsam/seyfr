@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.theme
+package com.jitpomi.seyfr.ui.theme
 
 import android.app.Activity
 import android.os.Build

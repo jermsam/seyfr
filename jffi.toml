@@ -13,11 +13,11 @@ enabled = [
 
 [platforms.ios]
 deployment_target = "16.0"
-bundle_id = "com.example.seyfr"
+bundle_id = "com.jitpomi.seyfr"
 
 [platforms.android]
 min_sdk = 26
-package = "com.example.seyfr"
+package = "com.jitpomi.seyfr"
 
 [platforms.macos]
 deployment_target = "13.0"

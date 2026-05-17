@@ -1,4 +1,4 @@
-package com.example.seyfr
+package com.jitpomi.seyfr
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,11 +26,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.seyfr.ui.components.AppLogo
-import com.example.seyfr.ui.screens.ReceiveScreen
-import com.example.seyfr.ui.screens.SendScreen
-import com.example.seyfr.ui.screens.SupportScreen
-import com.example.seyfr.ui.theme.SeyfrTheme
+import com.jitpomi.seyfr.ui.components.AppLogo
+import com.jitpomi.seyfr.ui.screens.ReceiveScreen
+import com.jitpomi.seyfr.ui.screens.SendScreen
+import com.jitpomi.seyfr.ui.screens.SupportScreen
+import com.jitpomi.seyfr.ui.theme.SeyfrTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

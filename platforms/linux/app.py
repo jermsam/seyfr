@@ -9,7 +9,7 @@ from window import SeyfrWindow
 class SeyfrApplication(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id='com.example.seyfr',
+            application_id='com.jitpomi.seyfr',
             flags=Gio.ApplicationFlags.DEFAULT_FLAGS
         )
         self.window = None

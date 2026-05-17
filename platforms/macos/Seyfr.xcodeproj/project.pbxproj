@@ -177,7 +177,7 @@
 					"-framework",
 					"Security",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.seyfr;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jitpomi.seyfr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
@@ -211,7 +211,7 @@
 					"-framework",
 					"Security",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.seyfr;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jitpomi.seyfr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;

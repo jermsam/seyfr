@@ -1,4 +1,4 @@
-package com.example.seyfr
+package com.jitpomi.seyfr
 
 import android.content.Context
 import android.util.Log

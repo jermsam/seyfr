@@ -1,4 +1,4 @@
-package com.example.seyfr.ui.components
+package com.jitpomi.seyfr.ui.components
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
