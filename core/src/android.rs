@@ -21,8 +21,8 @@ use std::ffi::c_void;
 /// This function is called from JNI and must follow JNI safety rules.
 /// The pointers passed to ndk-context must remain valid for the lifetime of the app.
 #[no_mangle]
-pub unsafe extern "C" fn Java_com_example_seyfr_JffiAndroidInit_initNdkContext(
-    mut env: JNIEnv,
+pub unsafe extern "C" fn Java_com_jitpomi_seyfr_JffiAndroidInit_initNdkContext(
+    env: JNIEnv,
     _class: JClass,
     context: JObject,
 ) {
