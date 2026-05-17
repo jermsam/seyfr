@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -28,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.seyfr.ui.components.AppLogo
 import com.example.seyfr.ui.screens.ReceiveScreen
 import com.example.seyfr.ui.screens.SendScreen
+import com.example.seyfr.ui.screens.SupportScreen
 import com.example.seyfr.ui.theme.SeyfrTheme
 
 class MainActivity : ComponentActivity() {
@@ -95,6 +97,17 @@ fun SeyfrApp(
                     },
                     label = { Text("Receive") }
                 )
+                NavigationBarItem(
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Support"
+                        )
+                    },
+                    label = { Text("Support") }
+                )
             }
         }
     ) { paddingValues ->
@@ -118,6 +131,7 @@ fun SeyfrApp(
                         onReceive = onReceive,
                         onSetDestination = onSetDestination
                     )
+                    2 -> SupportScreen()
                 }
             }
         }
