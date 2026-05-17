@@ -30,3 +30,27 @@ gtk_version = "4.0"
 
 [platforms.web]
 target = "es2020"
+
+[bundle]
+name = "Seyfr"
+identifier = "com.jitpomi.seyfr"
+version = "1.0"
+display_version = "1.0"
+build_number = 1
+
+[bundle.android]
+formats = ["aab", "apk"]
+abis = ["arm64-v8a", "armeabi-v7a", "x86_64"]
+min_sdk = 26
+compile_sdk = 35
+build_type = "release"
+split_debug_symbols = true
+
+[bundle.signing]
+profile = "release"
+
+[bundle.signing.profiles.release.android]
+keystore_path = "platforms/android/app/release.keystore"
+key_alias = "release"
+store_password_env = "JFFI_ANDROID_STORE_PASSWORD"
+key_password_env = "JFFI_ANDROID_KEY_PASSWORD"
