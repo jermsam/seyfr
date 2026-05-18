@@ -57,7 +57,7 @@ jobs:
       - name: Build Standalone Unpackaged EXE
         shell: pwsh
         run: |
-          dotnet publish platforms/windows/seyfr.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -p:PublishReadyToRun=true -p:Platform=x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o target/publish
+          dotnet publish platforms/windows/seyfr.csproj -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true -p:PublishReadyToRun=false -p:PublishTrimmed=false -p:Platform=x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -o target/publish
 
       - name: Rename Standalone EXE for release
         shell: pwsh
@@ -67,7 +67,7 @@ jobs:
       - name: Build and Package Packaged MSIX (For Microsoft Store)
         shell: pwsh
         run: |
-          msbuild platforms/windows/seyfr.csproj /p:Configuration=Release /p:Platform=x64 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
+          msbuild platforms/windows/seyfr.csproj /p:Configuration=Release /p:Platform=x64 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false /p:PublishReadyToRun=false /p:PublishTrimmed=false
 
       - name: Locate and Rename MSIX package for release
         shell: pwsh
