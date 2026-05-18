@@ -108,23 +108,23 @@
       <p>SEYFR is a decentralized, secure peer-to-peer file sharing application built on top of the Iroh protocol. This Privacy Policy explains our data practices when you install and use the SEYFR mobile and desktop applications.</p>
 
       <h2>1. Data Collection & Storage</h2>
-      <p>SEYFR operates on a direct peer-to-peer (P2P) architecture:</p>
+      <p>SEYFR connects your devices directly to one another:</p>
       <ul>
-        <li><strong>Zero Cloud Storage:</strong> We do not host, store, intercept, or mirror any files, photos, videos, or documents you transfer through SEYFR. All data transfers occur directly between the sender and receiver over encrypted QUIC connections.</li>
-        <li><strong>Local Storage:</strong> Any files received or transferred are stored strictly locally inside your device's protected application sandbox or user-designated media directories.</li>
-        <li><strong>Account Data:</strong> SEYFR does not require user registration, logins, passwords, or phone numbers to operate.</li>
+        <li><strong>Zero Cloud Storage:</strong> We do not host, store, intercept, or see any files, photos, videos, or documents you send. Everything travels directly between the sender and the receiver over highly secure, private connections.</li>
+        <li><strong>Local Storage:</strong> Any files you receive are stored strictly on your own device—either in the app itself or in the folders you choose.</li>
+        <li><strong>No Account Required:</strong> SEYFR does not require you to sign up. We don't ask for your name, email, phone number, or password.</li>
       </ul>
 
-      <h2>2. Network Connectivity & Peer Discovery</h2>
-      <p>To establish direct P2P connections, SEYFR utilizes encrypted ticket strings (QR codes) containing ephemeral public keys and direct IP endpoints:</p>
+      <h2>2. Network & Connections</h2>
+      <p>To link your devices, SEYFR uses secure QR codes that contain local connection paths:</p>
       <ul>
-        <li><strong>Relay Nodes:</strong> If a direct NAT-traversal connection cannot be established between peers, SEYFR may route encrypted packets through public Iroh relay servers (DERP nodes) strictly for connection pairing facilitation. Relay nodes cannot decrypt payload data.</li>
+        <li><strong>Helper Servers:</strong> If your devices cannot connect directly because of strict router settings, SEYFR will route your encrypted files through public helper servers to establish the path. These helpers are completely blind—they cannot see, decrypt, or read your files under any circumstances.</li>
       </ul>
 
-      <h2>3. Camera & Media Permissions</h2>
+      <h2>3. Device Permissions</h2>
       <ul>
-        <li><strong>Camera Access:</strong> SEYFR requests camera permissions solely for the purpose of scanning QR code tickets to initiate peer connection pairing. Camera streams are processed locally on device and never transmitted over the network.</li>
-        <li><strong>Storage Access:</strong> Storage permissions are required strictly to read selected files for transmission and save incoming files to disk upon user confirmation.</li>
+        <li><strong>Camera Access:</strong> We only ask for camera access so you can scan QR codes to connect your devices. SEYFR never uploads or shares your camera feeds.</li>
+        <li><strong>Storage Access:</strong> We only ask to access your files so we can send the ones you choose and save the ones you receive.</li>
       </ul>
 
       <h2>4. Third-Party Services</h2>
