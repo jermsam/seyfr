@@ -92,5 +92,5 @@ jobs:
             target/appimage/Seyfr_amd64.AppImage.asc
           draft: false
           prerelease: false
-          token: ${{ secrets.RELEASES_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SEYFR_RELEASES_TOKEN || secrets.GITHUB_TOKEN }}
 
