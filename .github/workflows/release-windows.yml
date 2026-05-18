@@ -37,7 +37,7 @@ jobs:
       - name: Install uniffi-bindgen-cs
         shell: pwsh
         run: |
-          cargo install uniffi-bindgen-cs --git https://github.com/NordSecurity/uniffi-bindgen-cs --tag v0.11.0+v0.31.0 --locked
+          cargo install uniffi-bindgen-cs --git https://github.com/jmbryan4/uniffi-bindgen-cs --branch upgrade/uniffi-rs-0.31.0-clean --locked
 
       - name: Build Rust Core DLL
         shell: pwsh
