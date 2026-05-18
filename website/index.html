@@ -315,6 +315,70 @@
       align-items: center;
     }
 
+    .download-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .download-option {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 18px;
+      background: #f5f5f7;
+      border-radius: 999px;
+      color: #1d1d1f;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .download-option:hover {
+      background: #e8e8ed;
+    }
+
+    .download-option.primary-blue {
+      background: #e8f0fe;
+      color: #0066cc;
+    }
+
+    .download-option.primary-blue:hover {
+      background: #d2e3fc;
+    }
+
+    .download-option.disabled {
+      color: #76767b;
+      cursor: not-allowed;
+    }
+
+    .download-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .gpg-key-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background: #e8f0fe;
+      border-radius: 999px;
+      color: #0066cc;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .gpg-key-btn:hover {
+      background: #d2e3fc;
+    }
+
     @media (max-width: 920px) {
       .hero {
         grid-template-columns: 1fr;
@@ -392,6 +456,30 @@
         align-items: center;
         text-align: center;
         width: 100%;
+      }
+
+      .download-options {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .download-option {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+
+      .download-group {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+      }
+
+      .download-group .download-option {
+        flex-grow: 1;
+        max-width: none;
       }
     }
 
@@ -851,18 +939,18 @@
           Download SEYFR
         </a>
         
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px;">
-          <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Apple Silicon">macOS (M-Series)</a>
-          <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Intel Macs">macOS (Intel)</a>
-          <a id="download-windows" href="https://apps.microsoft.com/detail/9P18ZR98ZXN2" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #e8f0fe; border-radius: 999px; color: #0066cc; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Get SEYFR from the Microsoft Store">Windows (Store)</a>
-          <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Download standalone Windows installer">Windows (Direct EXE)</a>
+        <div class="download-options">
+          <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" rel="noopener noreferrer" class="download-option" title="Apple Silicon">macOS (M-Series)</a>
+          <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" rel="noopener noreferrer" class="download-option" title="Intel Macs">macOS (Intel)</a>
+          <a id="download-windows" href="https://apps.microsoft.com/detail/9P18ZR98ZXN2" target="_blank" rel="noopener noreferrer" class="download-option primary-blue" title="Get SEYFR from the Microsoft Store">Windows (Store)</a>
+          <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" class="download-option" title="Download standalone Windows installer">Windows (Direct EXE)</a>
           <!-- Linux + GPG Key grouped together -->
-          <div style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-            <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none;">Linux</a>
-            <a href="/seyfr-public-key.asc" style="display: inline-flex; align-items: center; padding: 6px 12px; background: #e8f0fe; border-radius: 999px; color: #0066cc; font-size: 12px; font-weight: 500; text-decoration: none;" title="Download GPG Public Key to verify AppImage cryptographic integrity" target="_blank" rel="noopener noreferrer">GPG Key</a>
+          <div class="download-group">
+            <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" rel="noopener noreferrer" class="download-option">Linux</a>
+            <a href="/seyfr-public-key.asc" class="gpg-key-btn" title="Download GPG Public Key to verify AppImage cryptographic integrity" target="_blank" rel="noopener noreferrer">GPG Key</a>
           </div>
-          <a id="download-android" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/app-release.apk" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;">Android</a>
-          <span id="download-ios" aria-disabled="true" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #76767b; font-size: 14px; font-weight: 500; white-space: nowrap; cursor: not-allowed;" title="Coming soon to the App Store">iOS (Coming Soon)</span>
+          <a id="download-android" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/app-release.apk" rel="noopener noreferrer" class="download-option">Android</a>
+          <span id="download-ios" aria-disabled="true" class="download-option disabled" title="Coming soon to the App Store">iOS (Coming Soon)</span>
         </div>
 
       </section>
