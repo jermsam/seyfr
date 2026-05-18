@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="f1774106-e971-8415-bf64-7689a199d7ff"
-    Publisher="CN=dev"
-    Version="1.0.0.0" />
+    Name="JITPOMILLC.SEYFR"
+    Publisher="CN=82FF2416-2009-4D00-A3ED-37C7375333F7"
+    Version="0.1.25.0" />
 
-  <mp:PhoneIdentity PhoneProductId="f1774106-e971-8415-bf64-7689a199d7ff" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="9P18ZR98ZXN2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>seyfr</DisplayName>
-    <PublisherDisplayName>dev</PublisherDisplayName>
+    <DisplayName>SEYFR</DisplayName>
+    <PublisherDisplayName>JITPOMI LLC</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -34,8 +34,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="seyfr"
-        Description="seyfr"
+        DisplayName="SEYFR"
+        Description="Send and receive files securely, peer-to-peer, with no cloud middleman."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
