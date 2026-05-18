@@ -807,7 +807,8 @@
         <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px;">
           <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Apple Silicon">macOS (M-Series)</a>
           <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Intel Macs">macOS (Intel)</a>
-          <a id="download-windows" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;">Windows</a>
+          <a id="download-windows" href="https://apps.microsoft.com/detail/9P18ZR98ZXN2" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #e8f0fe; border-radius: 999px; color: #0066cc; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Get SEYFR from the Microsoft Store">Windows (Store)</a>
+          <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap;" title="Download standalone Windows installer">Windows (Direct EXE)</a>
           <!-- Linux + GPG Key grouped together -->
           <div style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
             <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" rel="noopener noreferrer" style="display: inline-flex; align-items: center; padding: 10px 18px; background: #f5f5f7; border-radius: 999px; color: #1d1d1f; font-size: 14px; font-weight: 500; text-decoration: none;">Linux</a>
@@ -1122,8 +1123,8 @@
       
       if (isWin) {
         if (btn) {
-          btn.textContent = 'Download for Windows';
-          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe';
+          btn.textContent = 'Get SEYFR from Microsoft Store';
+          btn.href = 'https://apps.microsoft.com/detail/9P18ZR98ZXN2';
         }
       } else if (isMac) {
         if (btn) {
