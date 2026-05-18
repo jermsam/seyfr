@@ -10,8 +10,8 @@
   <link rel="canonical" href="https://seyfr.jitpomi.com/" />
   
   <!-- Preload Critical Images -->
-  <link rel="preload" as="image" href="assets/seyfrmobile.webp" media="(max-width: 560px)" />
-  <link rel="preload" as="image" href="assets/seyfr.webp" media="(min-width: 561px)" />
+  <link rel="preload" as="image" href="assets/seyfrmobile.webp" media="(max-width: 560px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/seyfr.webp" media="(min-width: 561px)" fetchpriority="high" />
   
   <!-- Open Graph / Social -->
   <meta property="og:type" content="website" />
@@ -745,8 +745,8 @@
 
       </section>
 
-      <section class="section">
-        <div class="line">
+      <section class="section" aria-labelledby="how-it-works-heading">
+        <div id="how-it-works-heading" class="line">
           Send from one device. Receive on another.
         </div>
         
@@ -761,7 +761,7 @@
         </div>
       </section>
 
-      <section class="features">
+      <section class="features" aria-label="Product Features">
         <div class="feature-card">
           <h3>Direct Peer-to-Peer Transfers</h3>
           <p>Move files securely between devices using next-gen P2P networking. Works directly over your local network or securely across the internet with automatic NAT traversal.</p>
@@ -776,9 +776,9 @@
         </div>
       </section>
 
-      <section class="download" id="download">
+      <section class="download" id="download" aria-labelledby="download-heading">
 
-        <h2>
+        <h2 id="download-heading">
           Download SEYFR.
         </h2>
 
@@ -786,7 +786,7 @@
           Simple file sharing across your devices.
         </p>
 
-        <a id="primary-download-btn" class="button" href="https://github.com/Jitpomi/seyfr-releases/releases/latest" target="_blank" style="margin-bottom: 24px;">
+        <a id="primary-download-btn" class="button" href="https://github.com/Jitpomi/seyfr-releases/releases/latest" target="_blank" rel="noopener noreferrer" style="margin-bottom: 24px;">
           Download SEYFR
         </a>
         
@@ -795,7 +795,7 @@
           <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" style="color: #1d1d1f; text-decoration: underline;" title="Apple Silicon">macOS (M-Series)</a>, 
           <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" style="color: #1d1d1f; text-decoration: underline;" title="Intel Macs">macOS (Intel)</a>, 
           <a id="download-windows" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" style="color: #1d1d1f; text-decoration: underline;">Windows</a>, 
-          <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" style="color: #1d1d1f; text-decoration: underline;">Linux</a> <a href="/seyfr-public-key.asc" style="font-size: 11px; color: #0066cc; text-decoration: none; margin-left: 2px;" title="Download GPG Public Key to verify AppImage cryptographic integrity" target="_blank">(GPG Key)</a>, 
+          <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" style="color: #1d1d1f; text-decoration: underline;">Linux</a> <a href="/seyfr-public-key.asc" style="font-size: 11px; color: #0066cc; text-decoration: none; margin-left: 2px;" title="Download GPG Public Key to verify AppImage cryptographic integrity" target="_blank" rel="noopener noreferrer">(GPG Key)</a>, 
           <a id="download-android" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/app-release.apk" style="color: #1d1d1f; text-decoration: underline;">Android</a>, 
           <span id="download-ios" aria-disabled="true" style="color: #76767b; cursor: not-allowed;" title="Coming soon to the App Store">iOS</span>
         </div>
