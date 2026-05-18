@@ -940,8 +940,8 @@
         </a>
         
         <div class="download-options">
-          <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_aarch64.dmg" rel="noopener noreferrer" class="download-option" title="Apple Silicon">macOS (M-Series)</a>
-          <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_x64.dmg" rel="noopener noreferrer" class="download-option" title="Intel Macs">macOS (Intel)</a>
+          <span id="download-macos-m" aria-disabled="true" class="download-option disabled" title="Coming soon to macOS (Apple Silicon)">macOS (M-Series - Coming Soon)</span>
+          <span id="download-macos-intel" aria-disabled="true" class="download-option disabled" title="Coming soon to macOS (Intel)">macOS (Intel - Coming Soon)</span>
           <a id="download-windows" href="https://apps.microsoft.com/detail/9P18ZR98ZXN2" target="_blank" rel="noopener noreferrer" class="download-option primary-blue" title="Get SEYFR from the Microsoft Store">Windows (Store)</a>
           <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" class="download-option" title="Download standalone Windows installer">Windows (Direct EXE)</a>
           <div class="download-group">
@@ -1263,8 +1263,10 @@
         }
       } else if (isMac) {
         if (btn) {
-          btn.textContent = 'Download for macOS';
-          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_aarch64.dmg';
+          btn.textContent = 'Coming Soon to macOS';
+          btn.href = '#';
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
         }
       } else if (isLinux) {
         if (btn) {
