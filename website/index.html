@@ -335,8 +335,38 @@
     }
 
     @media (max-width: 560px) {
+      body {
+        overflow-x: hidden;
+      }
+
       .wrap {
         padding: 20px 18px 64px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 14px;
+        align-items: center;
+        text-align: center;
+        padding-bottom: 10px;
+      }
+
+      nav div {
+        width: 100%;
+        justify-content: center;
+        gap: 12px !important;
+      }
+
+      #nav-support-btn {
+        padding: 0 12px !important;
+        font-size: 12px !important;
+        height: 32px !important;
+      }
+
+      #nav-share-btn {
+        padding: 0 12px !important;
+        font-size: 12px !important;
+        height: 32px !important;
       }
 
       h1 {
