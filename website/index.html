@@ -190,8 +190,8 @@
     }
 
     .visual img {
-      aspect-ratio: 1536 / 1024;
-      width: min(860px, 118%);
+      aspect-ratio: 1064 / 2066; /* Mobile-first portrait default aspect-ratio */
+      width: 100%;
       max-width: none;
       height: auto;
 
@@ -199,6 +199,13 @@
 
       filter:
         drop-shadow(0 32px 60px rgba(0,0,0,0.16));
+    }
+
+    @media (min-width: 561px) {
+      .visual img {
+        aspect-ratio: 1536 / 1024; /* Desktop landscape override */
+        width: min(860px, 118%);
+      }
     }
 
     .section {
@@ -336,12 +343,6 @@
       footer {
         display: block;
         line-height: 1.9;
-      }
-
-      .visual img {
-        aspect-ratio: 1064 / 2066;
-        width: 100%;
-        height: auto;
       }
     }
 
