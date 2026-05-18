@@ -1,0 +1,95 @@
+name: Build and Release Linux AppImage
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Build & Package Linux AppImage
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            core -> target
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            pkg-config \
+            libgtk-4-dev \
+            libadwaita-1-dev \
+            python3-gi \
+            python3-gi-cairo \
+            gir1.2-gtk-4.0 \
+            gir1.2-adw-1 \
+            wget \
+            gpg
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-size: '3.10'
+
+      - name: Install python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r platforms/linux/requirements.txt
+
+      - name: Install uniffi-bindgen
+        run: |
+          cargo install uniffi --features cli --bin uniffi-bindgen --version 0.31.1
+
+      - name: Build Rust Core
+        run: |
+          cargo build --release --manifest-path core/Cargo.toml
+
+      - name: Generate Python UniFFI Bindings
+        run: |
+          uniffi-bindgen generate \
+            --library target/release/libseyfr_core.so \
+            --language python \
+            --out-dir platforms/linux
+
+      - name: Package AppImage
+        run: |
+          chmod +x platforms/linux/build_appimage.sh
+          # Run the local orchestrator script
+          ./platforms/linux/build_appimage.sh
+
+      - name: Import GPG Key and Sign AppImage
+        if: env.GPG_PRIVATE_KEY != ''
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          # Detach sign the output AppImage
+          gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --armor --detach-sign target/appimage/Seyfr_amd64.AppImage
+
+      - name: Create Release and Upload Binaries
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            target/appimage/Seyfr_amd64.AppImage
+            target/appimage/Seyfr_amd64.AppImage.asc
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
