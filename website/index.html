@@ -935,21 +935,21 @@
           Simple file sharing across your devices.
         </p>
 
-        <a id="primary-download-btn" class="button" href="https://github.com/Jitpomi/seyfr-releases/releases/latest" target="_blank" rel="noopener noreferrer" style="margin-bottom: 24px;">
+        <a id="primary-download-btn" class="button" href="https://github.com/Jitpomi/seyfr-releases/releases" target="_blank" rel="noopener noreferrer" style="margin-bottom: 24px;">
           Download SEYFR
         </a>
         
         <div class="download-options">
-          <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg" rel="noopener noreferrer" class="download-option" title="Apple Silicon">macOS (M-Series)</a>
-          <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_x64.dmg" rel="noopener noreferrer" class="download-option" title="Intel Macs">macOS (Intel)</a>
+          <a id="download-macos-m" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_aarch64.dmg" rel="noopener noreferrer" class="download-option" title="Apple Silicon">macOS (M-Series)</a>
+          <a id="download-macos-intel" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_x64.dmg" rel="noopener noreferrer" class="download-option" title="Intel Macs">macOS (Intel)</a>
           <a id="download-windows" href="https://apps.microsoft.com/detail/9P18ZR98ZXN2" target="_blank" rel="noopener noreferrer" class="download-option primary-blue" title="Get SEYFR from the Microsoft Store">Windows (Store)</a>
-          <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/seyfr-x64.exe" rel="noopener noreferrer" class="download-option" title="Download standalone Windows installer">Windows (Direct EXE)</a>
+          <a id="download-windows-direct" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/seyfr-x64.exe" rel="noopener noreferrer" class="download-option" title="Download standalone Windows installer">Windows (Direct EXE)</a>
           <!-- Linux + GPG Key grouped together -->
           <div class="download-group">
-            <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage" rel="noopener noreferrer" class="download-option">Linux</a>
+            <a id="download-linux" href="https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_amd64.AppImage" rel="noopener noreferrer" class="download-option">Linux</a>
             <a href="/seyfr-public-key.asc" class="gpg-key-btn" title="Download GPG Public Key to verify AppImage cryptographic integrity" target="_blank" rel="noopener noreferrer">GPG Key</a>
           </div>
-          <a id="download-android" href="https://github.com/Jitpomi/seyfr-releases/releases/latest/download/app-release.apk" rel="noopener noreferrer" class="download-option">Android</a>
+          <span id="download-android" aria-disabled="true" class="download-option disabled" title="Coming soon to the Google Play Store">Android (Coming Soon)</span>
           <span id="download-ios" aria-disabled="true" class="download-option disabled" title="Coming soon to the App Store">iOS (Coming Soon)</span>
         </div>
 
@@ -1265,17 +1265,21 @@
       } else if (isMac) {
         if (btn) {
           btn.textContent = 'Download for macOS';
-          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_aarch64.dmg';
+          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_aarch64.dmg';
         }
       } else if (isLinux) {
         if (btn) {
           btn.textContent = 'Download for Linux';
-          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/Seyfr_amd64.AppImage';
+          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/download/v0.1.23/Seyfr_amd64.AppImage';
         }
       } else if (isAndroid) {
         if (btn) {
-          btn.textContent = 'Download for Android';
-          btn.href = 'https://github.com/Jitpomi/seyfr-releases/releases/latest/download/app-release.apk';
+          btn.textContent = 'Coming Soon to Android';
+          btn.href = '#';
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          btn.setAttribute('aria-disabled', 'true');
+          btn.addEventListener('click', (e) => e.preventDefault());
         }
       } else if (isIos) {
         if (btn) {
