@@ -395,9 +395,7 @@
     .toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
-    }
-
-    /* Premium Share Dropdown Menu */
+     /* Premium Share Dropdown Menu */
     .share-menu {
       position: absolute;
       width: 220px;
@@ -410,13 +408,15 @@
       padding: 8px;
       z-index: 1000;
       opacity: 0;
+      visibility: hidden; /* Prevent keyboard tab-focus and screen-reader access when hidden */
       transform: scale(0.95) translateY(-8px);
       pointer-events: none;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
       transform-origin: top right;
     }
     .share-menu.show {
       opacity: 1;
+      visibility: visible;
       transform: scale(1) translateY(0);
       pointer-events: auto;
     }
@@ -451,7 +451,7 @@
       background: rgba(0, 0, 0, 0.08);
       margin: 6px 0;
     }
-
+ 
     /* Premium High-End Support Modal */
     .modal-overlay {
       position: fixed;
@@ -467,11 +467,13 @@
       justify-content: center;
       z-index: 1500;
       opacity: 0;
+      visibility: hidden; /* Prevent keyboard tab-focus and screen-reader access when hidden */
       pointer-events: none;
-      transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s;
     }
     .modal-overlay.show {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
     }
     .modal-card {
