@@ -63,6 +63,12 @@ elif [ -f "${PLATFORM_DIR}/libseyfr_core.so" ]; then
     cp "${PLATFORM_DIR}/libseyfr_core.so" "${APPDIR}/usr/bin/"
 fi
 
+# Bundling Python dependencies (qrcode, Pillow) to make the AppImage 100% self-contained
+if [ "$OS_TYPE" == "Linux" ]; then
+    echo "📦 Bundling Python dependencies (qrcode, Pillow)..."
+    python3 -m pip install --target "${APPDIR}/usr/bin" qrcode Pillow
+fi
+
 # 5. Copy Icons and Desktop Entries
 echo "🎨 Adding brand icons & desktop configurations..."
 cp "${REPO_DIR}/playstore-assets/app_icon.png" "${APPDIR}/usr/share/icons/hicolor/512x512/apps/seyfr.png"
