@@ -494,37 +494,37 @@
              <text x="690" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">Linux (GTK 4)</text>
  
              <!-- Down Arrows from UI to FFI -->
-             <path class="blueprint-flow-line" d="M 95 95 L 95 155 L 320 155 L 320 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
-             <path class="blueprint-flow-line" d="M 245 95 L 245 145 L 350 145 L 350 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
-             <path class="blueprint-flow-line" d="M 395 95 L 395 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
-             <path class="blueprint-flow-line" d="M 545 95 L 545 145 L 440 145 L 440 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
-             <path class="blueprint-flow-line" d="M 690 95 L 690 155 L 470 155 L 470 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 95 95 L 95 152 L 320 152 L 320 170" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 245 95 L 245 142 L 350 142 L 350 170" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 395 95 L 395 170" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 545 95 L 545 142 L 440 142 L 440 170" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 690 95 L 690 152 L 470 152 L 470 170" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
  
              <!-- FFI Layer (Inside JFFI Envelope) -->
-             <rect class="pulsing-box" x="290" y="175" width="210" height="55" rx="12" fill="#0066cc" stroke="#0055a5" stroke-width="2"/>
-             <text x="395" y="202" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">JFFI &amp; UniFFI Bridge</text>
-             <text x="395" y="218" font-family="-apple-system, sans-serif" font-size="11" fill="#cbe3ff" text-anchor="middle">Translates native commands to Rust instantly</text>
+             <rect class="pulsing-box" x="290" y="170" width="210" height="65" rx="12" fill="#0066cc" stroke="#0055a5" stroke-width="2"/>
+             <text x="395" y="196" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">JFFI &amp; UniFFI Bridge</text>
+             <text x="395" y="214" font-family="-apple-system, sans-serif" font-size="11" fill="#cbe3ff" text-anchor="middle">Translates native commands to Rust instantly</text>
  
              <!-- Down Arrow from FFI to Core -->
-             <path d="M 395 230 L 395 280" stroke="#0066cc" stroke-width="2" marker-end="url(#blue-arrow)"/>
+             <path d="M 395 235 L 395 280" stroke="#0066cc" stroke-width="2" marker-end="url(#blue-arrow)"/>
  
              <!-- Core Layer (Inside JFFI Envelope) -->
-             <rect class="pulsing-box" x="250" y="280" width="290" height="55" rx="12" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
-             <text x="395" y="305" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">Shared Rust Core (seyfr-core)</text>
-             <text x="395" y="321" font-family="-apple-system, sans-serif" font-size="11" fill="#86868b" text-anchor="middle">Core Security Vault, Direct Transfer Manager</text>
+             <rect class="pulsing-box" x="250" y="280" width="290" height="65" rx="12" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="395" y="306" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">Shared Rust Core (seyfr-core)</text>
+             <text x="395" y="324" font-family="-apple-system, sans-serif" font-size="11" fill="#86868b" text-anchor="middle">Core Security Vault, Direct Transfer Manager</text>
  
              <!-- Down Arrows from Core to Network/Storage -->
-             <path class="blueprint-flow-line" d="M 345 335 L 345 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
-             <path class="blueprint-flow-line" d="M 445 335 L 445 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 345 345 L 345 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 445 345 L 445 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
  
              <!-- Network & Storage Layer (Bottom, outside JFFI) -->
-             <rect x="180" y="385" width="200" height="55" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
+             <rect x="180" y="385" width="200" height="60" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
              <text x="280" y="410" font-family="-apple-system, sans-serif" font-size="13" fill="#00e676" text-anchor="middle" font-weight="600">Iroh Direct Tunneling</text>
-             <text x="280" y="424" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Direct connections through firewalls</text>
+             <text x="280" y="425" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Direct connections through firewalls</text>
  
-             <rect x="410" y="385" width="200" height="55" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
+             <rect x="410" y="385" width="200" height="60" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
              <text x="510" y="410" font-family="-apple-system, sans-serif" font-size="13" fill="#00e676" text-anchor="middle" font-weight="600">Block-by-Block Storage</text>
-             <text x="510" y="424" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Guarantees uncorrupted file delivery</text>
+             <text x="510" y="425" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Guarantees uncorrupted file delivery</text>
  
              <!-- Markers -->
              <defs>
