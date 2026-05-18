@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — SEYFR</title>
+  
+  <meta name="description" content="Explore the human-centric engineering, robust security, and seamless cross-platform native architecture behind SEYFR and JFFI." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Architecture — SEYFR" />
+  <meta property="og:description" content="Explore the human-centric engineering, robust security, and seamless cross-platform native architecture behind SEYFR and JFFI." />
+  <meta property="og:image" content="assets/seyfr-ogs/og-image.png" />
+  <meta property="og:type" content="website" />
+  
+  <!-- Styling -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 28px 80px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #6e6e73;
+      font-size: 14px;
+    }
+
+    .brand {
+      font-weight: 600;
+      color: #1d1d1f;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .back-link {
+      font-size: 13px;
+      color: #6e6e73;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #1d1d1f;
+    }
+
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: #0066cc;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 800px;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      color: #1d1d1f;
+    }
+
+    .sub {
+      margin: 24px auto 0;
+      max-width: 640px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: #515154;
+      letter-spacing: -0.01em;
+    }
+
+    /* Architectural Blueprint Card */
+    .blueprint-card {
+      background: #1d1d1f;
+      border-radius: 36px;
+      padding: 40px;
+      box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        0 8px 16px -2px rgba(0, 0, 0, 0.1),
+        0 24px 64px -12px rgba(0, 0, 0, 0.35);
+      margin: 40px 0 80px;
+      color: #f5f5f7;
+    }
+
+    .blueprint-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .blueprint-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .blueprint-subtitle {
+      font-size: 13px;
+      color: #86868b;
+      margin-top: 6px;
+    }
+
+    .diagram-container {
+      width: 100%;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    .diagram-container svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Content Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 80px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .full-width-card {
+      grid-column: span 2;
+      background: #fff;
+      border-radius: 28px;
+      padding: 50px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 18px;
+      color: #1d1d1f;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #515154;
+      margin: 0 0 20px;
+    }
+
+    p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background: #e8e8ed;
+      border-radius: 999px;
+      color: #1d1d1f;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .jffi-badge {
+      background: #e8f0fe;
+      color: #0066cc;
+    }
+
+    /* SVG Animations & Interactions */
+    .jffi-envelope {
+      stroke-dasharray: 8, 4;
+      animation: crawlBorder 20s linear infinite;
+    }
+    
+    @keyframes crawlBorder {
+      to { stroke-dashoffset: -120; }
+    }
+    
+    .blueprint-flow-line {
+      stroke-dasharray: 6, 6;
+      animation: flowBlueParticles 1.5s linear infinite;
+    }
+    
+    @keyframes flowBlueParticles {
+      to { stroke-dashoffset: -24; }
+    }
+
+    .rust-gear {
+      transform-origin: 100px 120px;
+      animation: spinGear 15s linear infinite;
+    }
+    
+    @keyframes spinGear {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .ffi-pulse {
+      stroke-dasharray: 6, 4;
+      animation: flowFFI 0.8s linear infinite;
+    }
+    
+    @keyframes flowFFI {
+      to { stroke-dashoffset: -20; }
+    }
+    
+    .pulse-dot {
+      animation: blinkDot 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes blinkDot {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    
+    .speed-needle {
+      transform-origin: 110px 110px;
+      animation: swingNeedle 3.5s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+    }
+    
+    @keyframes swingNeedle {
+      0% { transform: rotate(-35deg); }
+      30% { transform: rotate(15deg); }
+      50% { transform: rotate(8deg); }
+      70% { transform: rotate(18deg); }
+      100% { transform: rotate(20deg); }
+    }
+    
+    .neon-text {
+      animation: neonGlow 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes neonGlow {
+      from { opacity: 0.85; filter: drop-shadow(0 0 1px #0066cc); }
+      to { opacity: 1; filter: drop-shadow(0 0 5px #0066cc); }
+    }
+    
+    .jail-boundary {
+      transform-origin: 110px 77px;
+      animation: spinJail 25s linear infinite;
+    }
+    
+    @keyframes spinJail {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .shield-vault {
+      transform-origin: 110px 77px;
+      animation: protectPulse 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes protectPulse {
+      0% { transform: scale(0.97); }
+      100% { transform: scale(1.03); }
+    }
+    
+    .p2p-laser {
+      stroke-dasharray: 8, 6;
+      animation: sendPackets 1s linear infinite;
+    }
+    
+    @keyframes sendPackets {
+      to { stroke-dashoffset: -28; }
+    }
+    
+    .firewall-line {
+      animation: firewallPulse 1.8s ease-in-out infinite alternate;
+    }
+    
+    @keyframes firewallPulse {
+      0% { opacity: 0.25; }
+      100% { opacity: 0.75; }
+    }
+    
+    .pulsing-box {
+      transition: all 0.3s ease;
+    }
+    
+    .pulsing-box:hover {
+      filter: drop-shadow(0 0 8px rgba(0, 102, 204, 0.4)) !important;
+      transform: translateY(-2px);
+    }
+
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 50px;
+      align-items: center;
+    }
+    
+    .split-layout-reverse {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 50px;
+      align-items: center;
+    }
+    
+    .visual-panel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f9fa;
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid #e5e5ea;
+      height: 100%;
+      min-height: 250px;
+    }
+    
+    .dark-visual-panel {
+      background: #141416;
+      border: 1px solid #2a2a2e;
+    }
+
+    .card-visual-header {
+      margin-bottom: 24px;
+      background: #f8f9fa;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #e5e5ea;
+      height: 170px;
+    }
+    
+    .highlights-list {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+    }
+    
+    .highlights-list li {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #515154;
+    }
+    
+    .highlights-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #0066cc;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .highlights-list li strong {
+      color: #1d1d1f;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 120px;
+      padding-top: 24px;
+      border-top: 1px solid #d2d2d7;
+      display: flex;
+      justify-content: space-between;
+      color: #6e6e73;
+      font-size: 13px;
+    }
+
+    footer a {
+      color: #1d1d1f;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .split-layout, .split-layout-reverse {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width-card {
+        grid-column: span 1;
+        padding: 30px;
+      }
+      .card {
+        padding: 30px;
+      }
+      h1 {
+        font-size: 40px;
+      }
+      .hero {
+        padding: 40px 0 20px;
+      }
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- Navigation -->
+    <nav>
+      <a class="brand" href="index.html" style="display: flex; align-items: center; gap: 8px;">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#1d1d1f" stroke-width="1.5" />
+          <text x="12" y="16.5" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600" fill="#1d1d1f" text-anchor="middle">S</text>
+        </svg>
+        SEYFR
+      </a>
+      <a class="back-link" href="index.html">← Back to App</a>
+    </nav>
+
+    <!-- Hero Header -->
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Engineering Blueprint</div>
+        <h1>The Architecture of Trust</h1>
+        <p class="sub">
+          We believe technology should serve humanity with absolute safety, speed, and integrity. SEYFR is built on an elegant, vault-like native engine designed to make your digital life a paradise.
+        </p>
+      </section>
+
+      <!-- Interactive SVG Diagram Blueprint Card -->
+      <section class="blueprint-card">
+        <div class="blueprint-header">
+          <div class="blueprint-title">System Architecture Blueprint</div>
+          <div class="blueprint-subtitle">How JFFI bridges high-performance shared logic with native frontends for the ultimate platform experience.</div>
+        </div>
+
+        <div class="diagram-container">
+          <svg width="780" height="460" viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <!-- JFFI Orchestration Envelope (Surrounding all compilation/project steps) -->
+             <rect class="jffi-envelope" x="15" y="10" width="750" height="345" rx="20" fill="none" stroke="#0066cc" stroke-width="1.5"/>
+             <text x="30" y="30" font-family="-apple-system, sans-serif" font-size="12" fill="#0066cc" font-weight="700">JFFI Developer Framework (Power of Rust, Charm of Native)</text>
+ 
+             <!-- UI Layer (Top, native wrappers) -->
+             <rect x="30" y="45" width="130" height="50" rx="10" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="95" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">macOS (SwiftUI)</text>
+ 
+             <rect x="180" y="45" width="130" height="50" rx="10" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="245" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">Android (Compose)</text>
+ 
+             <rect x="330" y="45" width="130" height="50" rx="10" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="395" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">Windows (WinUI 3)</text>
+ 
+             <rect x="480" y="45" width="130" height="50" rx="10" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="545" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">iOS (SwiftUI)</text>
+ 
+             <rect x="630" y="45" width="120" height="50" rx="10" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="690" y="70" font-family="-apple-system, sans-serif" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600" dominant-baseline="middle">Linux (GTK 4)</text>
+ 
+             <!-- Down Arrows from UI to FFI -->
+             <path class="blueprint-flow-line" d="M 95 95 L 95 155 L 320 155 L 320 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 245 95 L 245 145 L 350 145 L 350 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 395 95 L 395 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 545 95 L 545 145 L 440 145 L 440 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 690 95 L 690 155 L 470 155 L 470 175" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+ 
+             <!-- FFI Layer (Inside JFFI Envelope) -->
+             <rect class="pulsing-box" x="290" y="175" width="210" height="55" rx="12" fill="#0066cc" stroke="#0055a5" stroke-width="2"/>
+             <text x="395" y="202" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">JFFI &amp; UniFFI Bridge</text>
+             <text x="395" y="218" font-family="-apple-system, sans-serif" font-size="11" fill="#cbe3ff" text-anchor="middle">Type-safe bindings &amp; native dev hot reload</text>
+ 
+             <!-- Down Arrow from FFI to Core -->
+             <path d="M 395 230 L 395 280" stroke="#0066cc" stroke-width="2" marker-end="url(#blue-arrow)"/>
+ 
+             <!-- Core Layer (Inside JFFI Envelope) -->
+             <rect class="pulsing-box" x="250" y="280" width="290" height="55" rx="12" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+             <text x="395" y="305" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">Shared Rust Core (seyfr-core)</text>
+             <text x="395" y="321" font-family="-apple-system, sans-serif" font-size="11" fill="#86868b" text-anchor="middle">Path Jail, Recursive File Walker, P2P Router</text>
+ 
+             <!-- Down Arrows from Core to Network/Storage -->
+             <path class="blueprint-flow-line" d="M 345 335 L 345 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+             <path class="blueprint-flow-line" d="M 445 335 L 445 385" stroke="#86868b" stroke-width="1.5" marker-end="url(#arrow)"/>
+ 
+             <!-- Network & Storage Layer (Bottom, outside JFFI) -->
+             <rect x="180" y="385" width="200" height="55" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
+             <text x="280" y="410" font-family="-apple-system, sans-serif" font-size="13" fill="#00e676" text-anchor="middle" font-weight="600">Iroh NAT Traversal</text>
+             <text x="280" y="424" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Direct device hole-punching</text>
+ 
+             <rect x="410" y="385" width="200" height="55" rx="10" fill="#141416" stroke="#2a2a2e" stroke-width="1.5"/>
+             <text x="510" y="410" font-family="-apple-system, sans-serif" font-size="13" fill="#00e676" text-anchor="middle" font-weight="600">Content-Addressed Storage</text>
+             <text x="510" y="424" font-family="-apple-system, sans-serif" font-size="10" fill="#6e6e73" text-anchor="middle">Guaranteed zero-corruption blocks</text>
+ 
+             <!-- Markers -->
+             <defs>
+               <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#86868b" />
+               </marker>
+               <marker id="blue-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#0066cc" />
+               </marker>
+             </defs>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Deep Dive Content Cards -->
+      <section class="grid">
+        
+        <div class="full-width-card">
+          <div class="split-layout">
+            <div>
+              <div class="feature-badge jffi-badge">The JFFI Philosophy: Power of Rust, Charm of Native</div>
+              <h2>Use the Right Tools for the Job</h2>
+              <p>
+                Usually, cross-platform apps compromise. They force a difficult choice: write the same code five separate times (wasting months), or settle for sluggish, bloated web wrappers that look out of place and drain battery life.
+              </p>
+              <p>
+                We believe you shouldn't choose. SEYFR is built on <strong>JFFI</strong> to give you the absolute best of both:
+              </p>
+              <ul class="highlights-list">
+                <li><strong>Rust Systems Engine Core:</strong> Pure speed, zero-cost abstractions, memory safety, and vault-grade P2P protocols.</li>
+                <li><strong>100% Platform-Native UI:</strong> SwiftUI for Apple, Compose for Android, and WinUI 3 for Windows, guaranteeing natural 120Hz look and feel.</li>
+                <li><strong>Automated Translation:</strong> Generates flawless binders, scaffolds targets, and handles complex platform workarounds under the hood.</li>
+              </ul>
+            </div>
+            
+            <div class="visual-panel">
+              <!-- Inline SVG Gear & Device Widget Mashup -->
+              <svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Rust Gear (Left) -->
+                <circle class="rust-gear" cx="100" cy="120" r="50" fill="none" stroke="#0066cc" stroke-width="3"/>
+                <circle cx="100" cy="120" r="30" fill="#e8f0fe"/>
+                <!-- Native UI Widget Layout (Right) -->
+                <rect x="180" y="50" width="110" height="140" rx="16" fill="#1d1d1f" stroke="#444448" stroke-width="2"/>
+                <!-- Widget UI elements inside native preview -->
+                <rect x="195" y="70" width="80" height="25" rx="8" fill="#0066cc" opacity="0.85"/>
+                <rect x="195" y="105" width="80" height="8" rx="4" fill="#ffffff" opacity="0.3"/>
+                <rect x="195" y="120" width="50" height="8" rx="4" fill="#ffffff" opacity="0.3"/>
+                <circle cx="210" cy="155" r="12" fill="#00e676" opacity="0.9" class="pulse-dot"/>
+                <circle cx="240" cy="155" r="12" fill="#86868b"/>
+                <circle cx="270" cy="155" r="12" fill="#86868b"/>
+                <!-- Connecting Laser Lines (FFI bridges) -->
+                <path class="ffi-pulse" d="M 140 100 Q 160 85 185 85" stroke="#0066cc" stroke-width="2"/>
+                <path class="ffi-pulse" d="M 150 120 L 180 120" stroke="#0066cc" stroke-width="2"/>
+                <path class="ffi-pulse" d="M 140 140 Q 160 155 195 155" stroke="#0066cc" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-visual-header">
+            <!-- Sleek Frame Rate Speeder Graphic -->
+            <svg width="240" height="130" viewBox="0 0 240 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 30 110 A 80 80 0 0 1 190 110" stroke="#e5e5ea" stroke-width="12" stroke-linecap="round" fill="none"/>
+              <path d="M 30 110 A 80 80 0 0 1 150 48" stroke="#0066cc" stroke-width="12" stroke-linecap="round" fill="none"/>
+              <circle cx="110" cy="110" r="12" fill="#1d1d1f"/>
+              <line class="speed-needle" x1="110" y1="110" x2="145" y2="60" stroke="#1d1d1f" stroke-width="4" stroke-linecap="round"/>
+              <text x="110" y="125" font-family="-apple-system, sans-serif" font-size="10" fill="#86868b" text-anchor="middle" font-weight="600">FPS RATE</text>
+              <text class="neon-text" x="175" y="60" font-family="-apple-system, sans-serif" font-size="20" fill="#0066cc" font-weight="800">120Hz</text>
+            </svg>
+          </div>
+          <div>
+            <div class="feature-badge">Pure Performance</div>
+            <h2>Zero Compromise Native UIs</h2>
+            <p>We refuse lazy web-wrappers. SEYFR plugs directly into natural native UI frameworks for the ultimate user experience:</p>
+            <ul class="highlights-list">
+              <li><strong>Butter-Smooth:</strong> Flawless 120Hz fluid rendering and instant touch responses.</li>
+              <li><strong>Tiny Footprint:</strong> Microscopic memory footprint and zero background browser battery drains.</li>
+              <li><strong>Platform Pride:</strong> Feels like an organic, premium part of your operating system.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-visual-header">
+            <!-- Path Jail / Shield Vault Graphic -->
+            <svg width="220" height="130" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Shield Outline -->
+              <path class="shield-vault" d="M 110 30 L 160 50 L 160 90 C 160 115, 110 125, 110 125 C 110 125, 60 115, 60 90 L 60 50 z" fill="#e8f0fe" stroke="#0066cc" stroke-width="2.5"/>
+              <!-- Safe Padlock Inner Ring -->
+              <rect x="95" y="65" width="30" height="24" rx="6" fill="#0066cc"/>
+              <path d="M 101 65 L 101 57 A 9 9 0 0 1 119 57 L 119 65" stroke="#0066cc" stroke-width="2.5" fill="none"/>
+              <circle cx="110" cy="74" r="3" fill="#ffffff"/>
+              <!-- Surrounding Jail bounds -->
+              <circle class="jail-boundary" cx="110" cy="77" r="45" stroke="#0066cc" stroke-width="1.5" opacity="0.7"/>
+            </svg>
+          </div>
+          <div>
+            <div class="feature-badge">Security First</div>
+            <h2>The Rust Core Vault</h2>
+            <p>Our core is written strictly in Rust, providing bulletproof safety guarantees right in the compiler:</p>
+            <ul class="highlights-list">
+              <li><strong>Path Jail Abstraction:</strong> Restricts all storage directories, making file-traversal hacks mathematically impossible.</li>
+              <li><strong>Memory Safety:</strong> Built without pointers or allocations that create traditional security exploits.</li>
+              <li><strong>Safe File Walker:</strong> Parses complex nested folders safely and instantly.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="full-width-card">
+          <div class="split-layout-reverse">
+            <div class="visual-panel dark-visual-panel">
+              <!-- Peer-to-Peer Tunnel Graphic -->
+              <svg width="340" height="220" viewBox="0 0 340 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Device Left (Laptop, centered exactly at y=110) -->
+                <rect x="30" y="92" width="60" height="36" rx="4" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+                <line x1="20" y1="128" x2="100" y2="128" stroke="#444448" stroke-width="3"/>
+                <!-- Device Right (Phone, centered exactly at y=110) -->
+                <rect x="250" y="74" width="40" height="72" rx="8" fill="#2d2d30" stroke="#444448" stroke-width="1.5"/>
+                <rect x="260" y="84" width="20" height="52" rx="2" fill="#0066cc" opacity="0.6"/>
+                <!-- Direct Connection Laser line, mathematically straight at y=110 -->
+                <path class="p2p-laser" d="M 90 110 L 250 110" stroke="#00e676" stroke-width="3" stroke-linecap="round"/>
+                <!-- Shielded Intermediary Firewalls (pierced!) -->
+                <line class="firewall-line" x1="140" y1="50" x2="140" y2="170" stroke="#ff3b30" stroke-dasharray="4 4" stroke-width="1.5"/>
+                <text class="firewall-line" x="130" y="45" font-family="-apple-system, sans-serif" font-size="10" fill="#ff3b30">Firewall</text>
+                <line class="firewall-line" x1="200" y1="50" x2="200" y2="170" stroke="#ff3b30" stroke-dasharray="4 4" stroke-width="1.5"/>
+                <!-- Direct Channel Badge -->
+                <rect x="120" y="145" width="100" height="24" rx="12" fill="#1c1c1e" stroke="#2c2c2e" stroke-width="1"/>
+                <text x="170" y="161" font-family="-apple-system, sans-serif" font-size="10" fill="#00e676" text-anchor="middle" font-weight="700">0% MIDDLEMEN</text>
+              </svg>
+            </div>
+            
+            <div>
+              <div class="feature-badge">Direct Delivery</div>
+              <h2>Direct Peer-to-Peer Highways</h2>
+              <p>
+                No third-party cloud servers, no corporation storing your keys, and no speed throttling. SEYFR directly tunnels file delivery.
+              </p>
+              <ul class="highlights-list">
+                <li><strong>NAT Hole Punching:</strong> Pierces through strict firewalls using advanced Iroh network protocols.</li>
+                <li><strong>Verifiable Blobs:</strong> Files are split into blocks and cryptographically validated for zero corruption.</li>
+                <li><strong>Instant Speed:</strong> Restricted only by your direct local upload/download bandwidth.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        Built by JITPOMI
+      </div>
+      <div style="display: flex; gap: 24px; align-items: center;">
+        <a href="index.html">Main Website</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="https://jitpomi.com">jitpomi.com</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+
+</html>
